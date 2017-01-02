@@ -9,7 +9,7 @@ namespace PixivBot
 		mrsiparam->conn = new SOCKET ();
 
 		//add to the queue here so that we don't send unnecessary requests
-		ImageManager::inqueue.insert (code);
+		ImageManager::in_img_queue.insert (code);
 
 		if (Rain::CreateClientSocket (&Start::p_saddrinfo_www, *(mrsiparam->conn)))
 			return -1;
@@ -38,7 +38,7 @@ namespace PixivBot
 		MRSIParam *mrsiparam = reinterpret_cast<MRSIParam *>(param);
 		std::string &fmess = *(mrsiparam->fmess);
 
-		RequestManager::DecCacheThread ();
+		RequestManager::DecReqThread ();
 
 		if (fmess.length () == 0)
 		{
@@ -55,9 +55,9 @@ namespace PixivBot
 				if (fmess.find ("ugokuIllustData") != std::string::npos)
 					Rain::RainCout << "MANUAL CONFIMATION (VIDEO): " <<  mrsiparam->code << std::endl;
 
-				ImageManager::inqueue.erase (mrsiparam->code);
-				ImageManager::processed.insert (mrsiparam->code);
-				ImageManager::awaiting.erase (mrsiparam->code);
+				ImageManager::in_img_queue.erase (mrsiparam->code);
+				ImageManager::img_processed.insert (mrsiparam->code);
+				ImageManager::img_requesting.erase (mrsiparam->code);
 
 				PostMessage (ImageWnd::image_wnd.hwnd, RAIN_IMAGECHANGE, 0, 0);
 				FreeAndCloseMRSI (mrsiparam);
@@ -74,9 +74,9 @@ namespace PixivBot
 				else //we have a problem
 				{
 					Rain::RainCout << "MANUAL CONFIMATION (???): " << mrsiparam->code << std::endl;
-					ImageManager::inqueue.erase (mrsiparam->code);
-					ImageManager::processed.insert (mrsiparam->code);
-					ImageManager::awaiting.erase (mrsiparam->code);
+					ImageManager::in_img_queue.erase (mrsiparam->code);
+					ImageManager::img_processed.insert (mrsiparam->code);
+					ImageManager::img_requesting.erase (mrsiparam->code);
 
 					PostMessage (ImageWnd::image_wnd.hwnd, RAIN_IMAGECHANGE, 0, 0);
 					FreeAndCloseMRSI (mrsiparam);
@@ -86,10 +86,10 @@ namespace PixivBot
 			else //single image submission
 			{
 				//create vector in bsfq for image name storage
-				ImageManager::image_queue.push (std::make_pair (mrsiparam->code, new std::vector<std::string> ()));
+				ImageManager::img_queue.push (std::make_pair (mrsiparam->code, new std::vector<std::string> ()));
 
 				orig = fmess.find ("data-src=\"", orig) + 10;
-				MarkDownloadSingleImage (fmess.substr (orig, fmess.find ("\"", orig) - orig), "http://www.pixiv.net/member_illust.php?mode=medium&illust_id=" + Rain::TToStr (mrsiparam->code), ImageManager::image_queue.back ().second);
+				MarkDownloadSingleImage (fmess.substr (orig, fmess.find ("\"", orig) - orig), "http://www.pixiv.net/member_illust.php?mode=medium&illust_id=" + Rain::TToStr (mrsiparam->code), ImageManager::img_queue.back ().second);
 			}
 		}
 
@@ -123,7 +123,7 @@ namespace PixivBot
 		MRSIParam *mrsiparam = reinterpret_cast<MRSIParam *>(param);
 		std::string &fmess = *(mrsiparam->fmess);
 
-		RequestManager::DecCacheThread ();
+		RequestManager::DecReqThread ();
 
 		if (fmess.length () == 0)
 		{
@@ -144,10 +144,10 @@ namespace PixivBot
 			}
 
 			//create bfsq vector
-			ImageManager::image_queue.push (std::make_pair (mrsiparam->code, new std::vector<std::string> ()));
+			ImageManager::img_queue.push (std::make_pair (mrsiparam->code, new std::vector<std::string> ()));
 
 			for (int a = 0;a < images;a++)
-				MarkParseMangaBigImage (mrsiparam->code, a, ImageManager::image_queue.back ().second);
+				MarkParseMangaBigImage (mrsiparam->code, a, ImageManager::img_queue.back ().second);
 		}
 
 		FreeAndCloseMRSI (mrsiparam);
@@ -182,7 +182,7 @@ namespace PixivBot
 		MRSIParam *mrsiparam = reinterpret_cast<MRSIParam *>(param);
 		std::string &fmess = *(mrsiparam->fmess);
 
-		RequestManager::DecCacheThread ();
+		RequestManager::DecReqThread ();
 
 		if (fmess.length () == 0)
 		{
@@ -260,7 +260,7 @@ namespace PixivBot
 		MRSIParam *mrsiparam = reinterpret_cast<MRSIParam *>(param);
 		std::string &fmess = *(mrsiparam->fmess);
 
-		RequestManager::DecCacheThread ();
+		RequestManager::DecReqThread ();
 
 		if (fmess.length () == 0)
 		{
@@ -313,7 +313,7 @@ namespace PixivBot
 		MRSIParam *mrsiparam = reinterpret_cast<MRSIParam *>(param);
 		std::string &fmess = *(mrsiparam->fmess);
 
-		RequestManager::DecCacheThread ();
+		RequestManager::DecReqThread ();
 
 		if (fmess.length () == 0)
 		{
@@ -322,7 +322,7 @@ namespace PixivBot
 		}
 		else
 		{
-			//for each recommendation, check if its processed or in queue; if not, markrequeststoreimage it
+			//for each recommendation, check if its img_processed or in queue; if not, markrequeststoreimage it
 			std::size_t recstart = fmess.find ("\":[") + 3;
 			std::vector<int> recs (Settings::recs_on_accept, 0);
 			int rec_counter = 0;
@@ -335,16 +335,16 @@ namespace PixivBot
 			}
 
 			for (std::size_t a = 0;a < recs.size ();a++)
-				if (ImageManager::processed.find (recs[a]) == ImageManager::processed.end () &&
-					ImageManager::inqueue.find (recs[a]) == ImageManager::inqueue.end ())
-						ImageManager::awaiting.insert (recs[a]);
+				if (ImageManager::img_processed.find (recs[a]) == ImageManager::img_processed.end () &&
+					ImageManager::in_img_queue.find (recs[a]) == ImageManager::in_img_queue.end ())
+						ImageManager::img_requesting.insert (recs[a]);
 
 			if (ImageWnd::image_wnd.hwnd != NULL)
 				SendMessage (ImageWnd::image_wnd.hwnd, RAIN_IMAGECHANGE, 0, 0);
 
 			for (std::size_t a = 0;a < recs.size ();a++)
-				if (ImageManager::processed.find (recs[a]) == ImageManager::processed.end () &&
-					ImageManager::inqueue.find (recs[a]) == ImageManager::inqueue.end ())
+				if (ImageManager::img_processed.find (recs[a]) == ImageManager::img_processed.end () &&
+					ImageManager::in_img_queue.find (recs[a]) == ImageManager::in_img_queue.end ())
 					MarkRequestStoreImage (recs[a]);
 		}
 
@@ -355,7 +355,7 @@ namespace PixivBot
 	{
 		MRSIParam *mrsiparam = reinterpret_cast<MRSIParam *>(param);
 
-		RequestManager::IncCacheThread ();
+		RequestManager::IncReqThread ();
 	}
 
 	void PrepMRSIParams (MRSIParam *mrsiparam, Rain::WSARecvParam *recvparam)
@@ -373,8 +373,8 @@ namespace PixivBot
 		Rain::CreateRecvThread (recvparam);
 
 		//prevents sending of requests until threads are open
-		RequestManager::mcthread.lock ();
-		RequestManager::mcthread.unlock ();
+		RequestManager::m_req_thread.lock ();
+		RequestManager::m_req_thread.unlock ();
 
 		Rain::RainCout << "sending request" << std::endl;
 	}

@@ -10,10 +10,10 @@ namespace PixivBot
 {
 	namespace RequestManager
 	{
-		extern int cachethread;
-		extern std::mutex mcthread;
+		extern int req_thread_count;
+		extern std::mutex m_req_thread;
 
-		void IncCacheThread ();
-		void DecCacheThread ();
+		void IncReqThread ();
+		void DecReqThread ();
 	}
 }

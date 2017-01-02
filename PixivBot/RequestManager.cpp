@@ -4,27 +4,27 @@ namespace PixivBot
 {
 	namespace RequestManager
 	{
-		int cachethread;
-		std::mutex mcthread;
+		int req_thread_count;
+		std::mutex m_req_thread;
 
-		void IncCacheThread ()
+		void IncReqThread ()
 		{
-			RequestManager::mcthread.lock ();
-			RequestManager::cachethread++;
+			RequestManager::m_req_thread.lock ();
+			RequestManager::req_thread_count++;
 
-			Rain::RainCout << "increased request threads to " << RequestManager::cachethread << std::endl;
+			Rain::RainCout << "increased request threads to " << RequestManager::req_thread_count << std::endl;
 			
-			if (Settings::max_req_threads == 0 || RequestManager::cachethread != Settings::max_req_threads)
-				RequestManager::mcthread.unlock ();
+			if (Settings::max_req_threads == 0 || RequestManager::req_thread_count != Settings::max_req_threads)
+				RequestManager::m_req_thread.unlock ();
 		}
-		void DecCacheThread ()
+		void DecReqThread ()
 		{
-			RequestManager::cachethread--;
+			RequestManager::req_thread_count--;
 
-			Rain::RainCout << "decreased request threads to " << RequestManager::cachethread << std::endl;
+			Rain::RainCout << "decreased request threads to " << RequestManager::req_thread_count << std::endl;
 
-			if (!Settings::max_req_threads == 0 && RequestManager::cachethread == Settings::max_req_threads - 1)
-				RequestManager::mcthread.unlock ();
+			if (!Settings::max_req_threads == 0 && RequestManager::req_thread_count == Settings::max_req_threads - 1)
+				RequestManager::m_req_thread.unlock ();
 		}
 	}
 }

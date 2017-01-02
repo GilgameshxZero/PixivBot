@@ -3,7 +3,7 @@
 	updated safe mode to be more consistent
 1.0.2
 	added capability to limit concurrent thread count
-	fixed cachethread related bugs
+	fixed req_thread_count related bugs
 1.0.3
 	fixed bug where requests would return an empty message and crash the program; now retries request
 	made cache loading a thread, so can process images while loading cache
@@ -32,3 +32,5 @@
 	code refactoring:
 		removed the sendhandler window, and made OnAccept/OnReject just functions
 		removed ImgWndProcDef files
+		removed UnivParam and spread variables amoung RequestManager and ImageManager
+		renamed variables and functions

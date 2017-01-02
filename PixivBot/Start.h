@@ -22,6 +22,4 @@ namespace PixivBot
 
 		int Start ();
 	}
-
-	DWORD WINAPI CacheImages (LPVOID param);
 }

@@ -12,11 +12,12 @@ namespace PixivBot
 				HOST_PORT = "80";
 
 			WSADATA wsa_data;
+			std::vector<int> img_queue_init; //initial image queue to cache, from config file
 
 			std::unordered_map<UINT, Rain::RainWindow::MSGFC> imagewndhandler;
 			Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 			ULONG_PTR gdiplusToken;
-			std::vector<std::string> tmpprocessed;
+			std::vector<std::string> tmpimg_processed;
 			WPARAM imgwndresult;
 
 			MSG msg;
@@ -29,8 +30,6 @@ namespace PixivBot
 			int error;
 
 			mem_leak = Rain::LogMemoryLeaks ("memory_leaks.txt");
-
-			Gdiplus::GdiplusStartup (&gdiplusToken, &gdiplusStartupInput, NULL);
 
 			Rain::RedirectCerrFile ("pixivbot_error.txt");
 			config.open ("config.txt", std::ios_base::in | std::ios_base::binary);
@@ -46,18 +45,17 @@ namespace PixivBot
 					if (tmpline[b] >= '0' && tmpline[b] <= '9')
 						tmp = tmp * 10 + tmpline[b] - '0';
 				}
-				ImageManager::tmpbsfq.push_back (tmp);
-				ImageManager::awaiting.insert (tmp);
+				img_queue_init.push_back (tmp);
+				ImageManager::img_requesting.insert (tmp);
 				std::getline (config, tmpline);
 				Rain::TrimBSR (tmpline);
 			}
 
-			if (ImageManager::tmpbsfq.size () == 0)
+			if (img_queue_init.size () == 0)
 			{
 				Rain::RainCout << "no origin images specified\npress enter to quit";
 				std::cin.get ();
 				config.close ();
-				Gdiplus::GdiplusShutdown (gdiplusToken);
 				return Rain::ReportError (-1, "No origin images specified.");
 			}
 
@@ -107,24 +105,26 @@ namespace PixivBot
 				}
 			}
 
-			//processed images
+			//img_processed images
 			std::getline (config, tmpline);
 			Rain::TrimBSR (tmpline);
 			while (tmpline != "")
 			{
-				ImageManager::processed.insert (Rain::StrToT<int> (tmpline));
+				ImageManager::img_processed.insert (Rain::StrToT<int> (tmpline));
 				std::getline (config, tmpline);
 				Rain::TrimBSR (tmpline);
 			}
 
 			config.close ();
 
-			//scan accepted directory for processed images
-			Rain::GetFiles (Settings::accept_dir, tmpprocessed, "*_p*.*");
-			for (unsigned int a = 0;a < tmpprocessed.size ();a++)
-				ImageManager::processed.insert (Rain::StrToT<int> (tmpprocessed[a].substr (0, tmpprocessed[a].find ("_"))));
+			//scan accepted directory for img_processed images
+			Rain::GetFiles (Settings::accept_dir, tmpimg_processed, "*_p*.*");
+			for (unsigned int a = 0;a < tmpimg_processed.size ();a++)
+				ImageManager::img_processed.insert (Rain::StrToT<int> (tmpimg_processed[a].substr (0, tmpimg_processed[a].find ("_"))));
 
-			//create window before cache is complete, so that we can process images while they are cached in
+			//create window so that we can process images while they are cached in
+			Gdiplus::GdiplusStartup (&gdiplusToken, &gdiplusStartupInput, NULL);
+
 			imagewndhandler.insert (std::make_pair (WM_CLOSE, ImageWnd::OnClose));
 			imagewndhandler.insert (std::make_pair (WM_KEYDOWN, ImageWnd::OnKeyDown));
 			imagewndhandler.insert (std::make_pair (WM_KEYUP, ImageWnd::OnKeyUp));
@@ -135,7 +135,7 @@ namespace PixivBot
 			UpdateWindow (ImageWnd::image_wnd.hwnd);
 			ShowWindow (ImageWnd::image_wnd.hwnd, SW_SHOWMAXIMIZED);
 
-			Rain::SimpleCreateThread (CacheImages, NULL);
+			Rain::SimpleCreateThread (ImageManager::CacheInitImages, NULL);
 
 			while ((bRet = GetMessage (&msg, NULL, 0, 0)) != 0)
 			{
@@ -155,7 +155,7 @@ namespace PixivBot
 
 			//write to config file the leftover queue at this point
 			config.open ("config.txt", std::ios_base::out | std::ios_base::binary);
-			for (std::unordered_set<int>::iterator it = ImageManager::awaiting.begin ();it != ImageManager::awaiting.end ();it++)
+			for (std::unordered_set<int>::iterator it = ImageManager::img_requesting.begin ();it != ImageManager::img_requesting.end ();it++)
 				config << "http://www.pixiv.net/member_illust.php?mode=medium&illust_id=" << *it << "\n";
 			config << "\n"
 				<< (Settings::safe_mode ? "safe" : "r18") << "\n"
@@ -170,15 +170,15 @@ namespace PixivBot
 				for (int b = 0;b < 3;b++)
 					config << Settings::http_req_header[a][b] << "\n";
 			//headers contain newlines at their end
-			for (std::unordered_set<int>::iterator it = ImageManager::processed.begin ();it != ImageManager::processed.end ();it++)
+			for (std::unordered_set<int>::iterator it = ImageManager::img_processed.begin ();it != ImageManager::img_processed.end ();it++)
 				config << *it << "\n";
 			config << "\n";
 			config.close ();
 
-			if (imgwndresult == 0) //exited because all images were processed
-				Rain::RainCout << "all images were processed\npress enter to quit";
+			if (imgwndresult == 0) //exited because all images were img_processed
+				Rain::RainCout << "all images were img_processed\npress enter to quit";
 			else if (imgwndresult == 1) //aborted program
-				Rain::RainCout << "program aborted before all images were processed\nprogress is saved for next program run\npress enter to quit";
+				Rain::RainCout << "program aborted before all images were img_processed\nprogress is saved for next program run\npress enter to quit";
 			std::cin.get ();
 
 			ImageWnd::image_wnd.~RainWindow ();
@@ -191,24 +191,5 @@ namespace PixivBot
 
 			return 0;
 		}
-	}
-
-	DWORD WINAPI CacheImages (LPVOID param)
-	{
-		for (unsigned int a = 0; a < ImageManager::tmpbsfq.size (); a++)
-		{
-			//cache images
-			if (ImageManager::processed.find (ImageManager::tmpbsfq[a]) == ImageManager::processed.end () && ImageManager::inqueue.find (ImageManager::tmpbsfq[a]) == ImageManager::inqueue.end ())
-			{
-				MarkRequestStoreImage (ImageManager::tmpbsfq[a]);
-				ImageManager::inqueue.insert (ImageManager::tmpbsfq[a]);
-			}
-			else
-				ImageManager::awaiting.erase (ImageManager::tmpbsfq[a]);
-
-			SendMessage (ImageWnd::image_wnd.hwnd, RAIN_IMAGECHANGE, 0, 0);
-		}
-
-		return 0;
 	}
 }

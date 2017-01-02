@@ -30,16 +30,17 @@ namespace PixivBot
 		}
 		LRESULT OnPaint (HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 		{
-			if (ImageManager::image_queue.size () == 0 || ImageManager::image_queue.front ().second->size () == 0) //images are still loading
+			if (ImageManager::img_queue.size () == 0 || ImageManager::img_queue.front ().second->size () == 0) //images are still loading
 				return 0;
 
 			PAINTSTRUCT ps;
 			BeginPaint (hwnd, &ps);
 
-			std::string imgpath = Settings::cache_dir + ImageManager::image_queue.front ().second->front ();
+			std::string imgpath = Settings::cache_dir + ImageManager::img_queue.front ().second->front ();
 			WCHAR *wimgpath;
 			wimgpath = new WCHAR[MAX_PATH];
 			MultiByteToWideChar (CP_UTF8, 0, imgpath.c_str (), -1, wimgpath, MAX_PATH);
+
 			Gdiplus::Image *img = new Gdiplus::Image (wimgpath);
 
 			RECT crect;
@@ -72,48 +73,40 @@ namespace PixivBot
 		{
 			static std::string loaded_image;
 
-			if (ImageManager::awaiting.size () == 0) //done with images
+			if (ImageManager::img_requesting.size () == 0) //done with images
 			{
 				PostMessage (hwnd, RAIN_CLOSEIMGWND, 0, 0);
 				return 0;
 			}
-			else if (ImageManager::image_queue.size () == 0 && RequestManager::cachethread != 0) //still loading in cache threads
+			else if (ImageManager::img_queue.size () == 0 && RequestManager::req_thread_count != 0) //still caching
 				return 0;
-			else if (ImageManager::image_queue.size () == 0 || ImageManager::image_queue.front ().second->size () == 0) //images are still loading
+			else if (ImageManager::img_queue.size () == 0 || ImageManager::img_queue.front ().second->size () == 0) //images are still loading
 				return 0;
-			else if (loaded_image == (*ImageManager::image_queue.front ().second)[0]) //no changes to the current image
+			else if (loaded_image == (*ImageManager::img_queue.front ().second)[0]) //no changes to the current image
 				return 0;
 
 			image_wnd_ready = false;
 			InvalidateRect (hwnd, NULL, TRUE);
 			UpdateWindow (hwnd);
 
-			loaded_image = (*ImageManager::image_queue.front ().second)[0];
-			Rain::RainCout << "loaded " << ImageManager::image_queue.front ().second->front () << "\n";
+			loaded_image = (*ImageManager::img_queue.front ().second)[0];
+			Rain::RainCout << "loaded " << ImageManager::img_queue.front ().second->front () << std::endl;
 
 			return 0;
 		}
 
 		void OnReject ()
 		{
-			if (ImageManager::image_queue.size () == 0 || ImageManager::image_queue.front ().second->size () == 0) //images are still loading
+			if (ImageManager::img_queue.size () == 0 || ImageManager::img_queue.front ().second->size () == 0) //images are still loading
 				return;
 
-			Rain::RainCout << "rejected " << ImageManager::image_queue.front ().second->front () << "\n";
+			Rain::RainCout << "rejected " << ImageManager::img_queue.front ().second->front () << std::endl;
 
 			//delete cached image
-			DeleteFile ((Settings::cache_dir + ImageManager::image_queue.front ().second->front ()).c_str ());
+			DeleteFile ((Settings::cache_dir + ImageManager::img_queue.front ().second->front ()).c_str ());
 
 			//remove entry from queue
-			ImageManager::image_queue.front ().second->erase (ImageManager::image_queue.front ().second->begin ());
-			if (ImageManager::image_queue.front ().second->size () == 0)
-			{
-				ImageManager::awaiting.erase (ImageManager::image_queue.front ().first);
-				ImageManager::inqueue.erase (ImageManager::image_queue.front ().first);
-				ImageManager::processed.insert (ImageManager::image_queue.front ().first);
-				delete ImageManager::image_queue.front ().second;
-				ImageManager::image_queue.pop ();
-			}
+			ImageManager::QueueRemCurImg ();
 
 			//set new image
 			SendMessage (ImageWnd::image_wnd.hwnd, RAIN_IMAGECHANGE, 0, 0);
@@ -121,32 +114,22 @@ namespace PixivBot
 
 		void OnAccept ()
 		{
-			if (ImageManager::image_queue.size () == 0 || ImageManager::image_queue.front ().second->size () == 0) //images are still loading
+			if (ImageManager::img_queue.size () == 0 || ImageManager::img_queue.front ().second->size () == 0) //images are still loading
 				return;
 
-			Rain::RainCout << "accepted " << ImageManager::image_queue.front ().second->front () << "\n";
+			Rain::RainCout << "accepted " << ImageManager::img_queue.front ().second->front () << std::endl;
 
 			//move image to accepted folder
-			MoveFile (((std::string)(Settings::cache_dir + ImageManager::image_queue.front ().second->front ())).c_str (), ((std::string)(Settings::accept_dir + ImageManager::image_queue.front ().second->front ())).c_str ());
+			MoveFile (((std::string)(Settings::cache_dir + ImageManager::img_queue.front ().second->front ())).c_str (), ((std::string)(Settings::accept_dir + ImageManager::img_queue.front ().second->front ())).c_str ());
 
-			int code = ImageManager::image_queue.front ().first;
+			MRSIParam *mrsiparam = new MRSIParam ();
+			mrsiparam->code = ImageManager::img_queue.front ().first;
 
 			//remove entry from queue
-			ImageManager::image_queue.front ().second->erase (ImageManager::image_queue.front ().second->begin ());
-			if (ImageManager::image_queue.front ().second->size () == 0)
-			{
-				ImageManager::awaiting.erase (ImageManager::image_queue.front ().first);
-				ImageManager::inqueue.erase (ImageManager::image_queue.front ().first);
-				ImageManager::processed.insert (ImageManager::image_queue.front ().first);
-				delete ImageManager::image_queue.front ().second;
-				ImageManager::image_queue.pop ();
-			}
+			ImageManager::QueueRemCurImg ();
 
 			//don't send RAIN_IMAGECHANGE yet, before loading recs; recs function will do it
-
 			//load recommended images into cache and queue, but do it asynchronously to make the process fast
-			MRSIParam *mrsiparam = new MRSIParam ();
-			mrsiparam->code = code;
 			Rain::SimpleCreateThread (MRSRThread, reinterpret_cast<LPVOID>(mrsiparam));
 		}
 	}
