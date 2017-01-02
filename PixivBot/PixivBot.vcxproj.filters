@@ -51,9 +51,6 @@
     <ClInclude Include="SendHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SendHandlerDef.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ImgWndProcDef.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -119,9 +116,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SendHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SendHandlerDef.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ImgWndProcDef.cpp">
@@ -197,5 +191,10 @@
     <Image Include="prog_icon.ico">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\.gitignore">
+      <Filter>Other</Filter>
+    </None>
   </ItemGroup>
 </Project>

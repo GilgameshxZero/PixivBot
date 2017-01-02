@@ -14,7 +14,7 @@
 
 #define VERSION_MAJOR            1
 #define VERSION_MINOR            1
-#define VERSION_REVISION         2
+#define VERSION_REVISION         3
 #define VERSION_BUILD            BUILD_INCREMENT
 
 #define VER_FILE_DESCRIPTION_STR "PixivBot"
