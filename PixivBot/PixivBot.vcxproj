@@ -73,25 +73,25 @@
     <OutDir>$(ProjectDir)</OutDir>
     <IntDir>C:\Main\Active\Documents\Programming\VisualStudio\Intermediates\$(SolutionName)\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
     <TargetName>$(SolutionName) - $(ProjectName) ($(Configuration) $(PlatformTarget))</TargetName>
-    <IncludePath>C:\Main\Active\Documents\Programming\Rain\Templates\Rain Standard Library;$(IncludePath)</IncludePath>
+    <IncludePath>Rain Standard Library;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(ProjectDir)</OutDir>
     <IntDir>C:\Main\Active\Documents\Programming\VisualStudio\Intermediates\$(SolutionName)\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
     <TargetName>$(SolutionName) - $(ProjectName) ($(Configuration) $(PlatformTarget))</TargetName>
-    <IncludePath>C:\Main\Active\Documents\Programming\Rain\Templates\Rain Standard Library;$(IncludePath)</IncludePath>
+    <IncludePath>Rain Standard Library;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(ProjectDir)</OutDir>
     <IntDir>C:\Main\Active\Documents\Programming\VisualStudio\Intermediates\$(SolutionName)\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
     <TargetName>$(SolutionName) - $(ProjectName) ($(Configuration) $(PlatformTarget))</TargetName>
-    <IncludePath>C:\Main\Active\Documents\Programming\Rain\Templates\Rain Standard Library;$(IncludePath)</IncludePath>
+    <IncludePath>Rain Standard Library;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(ProjectDir)</OutDir>
     <IntDir>C:\Main\Active\Documents\Programming\VisualStudio\Intermediates\$(SolutionName)\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
     <TargetName>$(SolutionName) - $(ProjectName) ($(Configuration) $(PlatformTarget))</TargetName>
-    <IncludePath>C:\Main\Active\Documents\Programming\Rain\Templates\Rain Standard Library;$(IncludePath)</IncludePath>
+    <IncludePath>Rain Standard Library;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -100,7 +100,7 @@
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <PreBuildEvent>
-      <Command>C:\Main\Active\Documents\Programming\VisualStudio\BuildIncScript.exe VersionBuildInc.h</Command>
+      <Command>BuildIncScript.exe VersionBuildInc.h</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -114,7 +114,7 @@
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <PreBuildEvent>
-      <Command>C:\Main\Active\Documents\Programming\VisualStudio\BuildIncScript.exe VersionBuildInc.h</Command>
+      <Command>BuildIncScript.exe VersionBuildInc.h</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -135,7 +135,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PreBuildEvent>
-      <Command>C:\Main\Active\Documents\Programming\VisualStudio\BuildIncScript.exe VersionBuildInc.h</Command>
+      <Command>BuildIncScript.exe VersionBuildInc.h</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -156,7 +156,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PreBuildEvent>
-      <Command>C:\Main\Active\Documents\Programming\VisualStudio\BuildIncScript.exe VersionBuildInc.h</Command>
+      <Command>BuildIncScript.exe VersionBuildInc.h</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -164,22 +164,22 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainGdiplusInclude.h" />
-    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainError.h" />
-    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainLibraries.h" />
-    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainLogging.h" />
-    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainUtilityFile.h" />
-    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainWindow.h" />
-    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainUtility.h" />
-    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainWindowsLAM.h" />
-    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainWSA2.h" />
-    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainWSA2Include.h" />
-    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainWSA2SendRecv.h" />
-    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainWSA2Utility.h" />
     <ClInclude Include="ImgWndProc.h" />
     <ClInclude Include="ImgWndProcDef.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="MRSIParam.h" />
+    <ClInclude Include="Rain Standard Library\RainError.h" />
+    <ClInclude Include="Rain Standard Library\RainGdiplusInclude.h" />
+    <ClInclude Include="Rain Standard Library\RainLibraries.h" />
+    <ClInclude Include="Rain Standard Library\RainLogging.h" />
+    <ClInclude Include="Rain Standard Library\RainUtility.h" />
+    <ClInclude Include="Rain Standard Library\RainUtilityFile.h" />
+    <ClInclude Include="Rain Standard Library\RainWindow.h" />
+    <ClInclude Include="Rain Standard Library\RainWindowsLAM.h" />
+    <ClInclude Include="Rain Standard Library\RainWSA2.h" />
+    <ClInclude Include="Rain Standard Library\RainWSA2Include.h" />
+    <ClInclude Include="Rain Standard Library\RainWSA2SendRecv.h" />
+    <ClInclude Include="Rain Standard Library\RainWSA2Utility.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="MarkRequestStoreImage.h" />
     <ClInclude Include="SendHandler.h" />
@@ -194,22 +194,22 @@
     <ResourceCompile Include="resource.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainGdiplusInclude.cpp" />
-    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainError.cpp" />
-    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainLibraries.cpp" />
-    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainLogging.cpp" />
-    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainUtilityFile.cpp" />
-    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainWindow.cpp" />
-    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainUtility.cpp" />
-    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainWindowsLAM.cpp" />
-    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainWSA2.cpp" />
-    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainWSA2Include.cpp" />
-    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainWSA2SendRecv.cpp" />
-    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainWSA2Utility.cpp" />
     <ClCompile Include="ImgWndProc.cpp" />
     <ClCompile Include="ImgWndProcDef.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MarkRequestStoreImage.cpp" />
+    <ClCompile Include="Rain Standard Library\RainError.cpp" />
+    <ClCompile Include="Rain Standard Library\RainGdiplusInclude.cpp" />
+    <ClCompile Include="Rain Standard Library\RainLibraries.cpp" />
+    <ClCompile Include="Rain Standard Library\RainLogging.cpp" />
+    <ClCompile Include="Rain Standard Library\RainUtility.cpp" />
+    <ClCompile Include="Rain Standard Library\RainUtilityFile.cpp" />
+    <ClCompile Include="Rain Standard Library\RainWindow.cpp" />
+    <ClCompile Include="Rain Standard Library\RainWindowsLAM.cpp" />
+    <ClCompile Include="Rain Standard Library\RainWSA2.cpp" />
+    <ClCompile Include="Rain Standard Library\RainWSA2Include.cpp" />
+    <ClCompile Include="Rain Standard Library\RainWSA2SendRecv.cpp" />
+    <ClCompile Include="Rain Standard Library\RainWSA2Utility.cpp" />
     <ClCompile Include="SendHandler.cpp" />
     <ClCompile Include="SendHandlerDef.cpp" />
     <ClCompile Include="Settings.cpp" />
@@ -221,7 +221,9 @@
     <Text Include="config.format.txt" />
     <Text Include="config.txt" />
     <Text Include="memory_leaks.txt" />
+    <Text Include="notes.txt" />
     <Text Include="pixivbot_error.txt" />
+    <Text Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="prog_icon.ico" />

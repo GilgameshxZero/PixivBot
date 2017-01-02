@@ -9,7 +9,7 @@
 #include "UnivParam.h"
 #include "resource.h"
 
-#include <RainLibraries.h>
+#include "RainLibraries.h"
 
 #include <crtdbg.h>
 #include <string>
