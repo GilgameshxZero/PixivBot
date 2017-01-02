@@ -1,0 +1,1 @@
+ESC exiting does not terminate threads but allows program to end

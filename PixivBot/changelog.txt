@@ -1,6 +1,3 @@
-pending:
-	ESC exiting does not terminate threads but allows program to end
-
 1.0.1
 	updated error handling for invalid pixiv image requests
 	updated safe mode to be more consistent
@@ -27,3 +24,7 @@ pending:
 	now closes window on ESC again
 	removed memory leaks
 	updated detection of image request errors
+1.1.2
+	added to github version control
+	added future directions file to list features/bugs to do
+	exclude txt files from build

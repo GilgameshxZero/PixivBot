@@ -171,9 +171,6 @@
     <Text Include="changelog.txt">
       <Filter>Other</Filter>
     </Text>
-    <Text Include="config.format.txt">
-      <Filter>Other</Filter>
-    </Text>
     <Text Include="config.txt">
       <Filter>Other</Filter>
     </Text>
@@ -183,10 +180,16 @@
     <Text Include="pixivbot_error.txt">
       <Filter>Other</Filter>
     </Text>
-    <Text Include="readme.txt">
+    <Text Include="notes.txt">
       <Filter>Other</Filter>
     </Text>
-    <Text Include="notes.txt">
+    <Text Include="..\readme.txt">
+      <Filter>Other</Filter>
+    </Text>
+    <Text Include="future_directions.txt">
+      <Filter>Other</Filter>
+    </Text>
+    <Text Include="config_format.txt">
       <Filter>Other</Filter>
     </Text>
   </ItemGroup>
