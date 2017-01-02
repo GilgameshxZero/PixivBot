@@ -1,8 +1,10 @@
 #pragma once
 
-#include "SendHandler.h"
+#include "ImageManager.h"
+#include "MarkRequestStoreImage.h"
+#include "MRSIParam.h"
+#include "RequestManager.h"
 #include "Settings.h"
-#include "UnivParam.h"
 
 #include "RainLibraries.h"
 
@@ -13,15 +15,19 @@
 
 namespace PixivBot
 {
-	namespace ImgWndProc
+	namespace ImageWnd
 	{
+		extern Rain::RainWindow image_wnd;
+
+		//message handlers
 		LRESULT OnClose (HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
 		LRESULT OnKeyDown (HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
 		LRESULT OnKeyUp (HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
 		LRESULT OnPaint (HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
 		LRESULT OnSize (HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
-
-		//curimgfile in uparam is updated
 		LRESULT OnImageChange (HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
+
+		void OnReject ();
+		void OnAccept ();
 	}
 }

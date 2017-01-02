@@ -2,16 +2,14 @@
 
 namespace PixivBot
 {
-	int MarkRequestStoreImage (int code, UnivParam *uparam)
+	int MarkRequestStoreImage (int code)
 	{
 		Rain::WSARecvParam *recvparam = new Rain::WSARecvParam ();
 		MRSIParam *mrsiparam = new MRSIParam ();
 		mrsiparam->conn = new SOCKET ();
 
 		//add to the queue here so that we don't send unnecessary requests
-		uparam->munivparam.lock ();
-		uparam->inqueue->insert (code);
-		uparam->munivparam.unlock ();
+		ImageManager::inqueue.insert (code);
 
 		if (Rain::CreateClientSocket (&Start::p_saddrinfo_www, *(mrsiparam->conn)))
 			return -1;
@@ -24,7 +22,7 @@ namespace PixivBot
 		recvparam->OnRecvEnd = OnMRSIExit;
 		mrsiparam->code = code;
 
-		PrepMRSIParams (mrsiparam, recvparam, uparam);
+		PrepMRSIParams (mrsiparam, recvparam);
 
 		Rain::SendText (*(mrsiparam->conn), getreq.c_str (), getreq.length ());
 		return 0;
@@ -40,12 +38,12 @@ namespace PixivBot
 		MRSIParam *mrsiparam = reinterpret_cast<MRSIParam *>(param);
 		std::string &fmess = *(mrsiparam->fmess);
 
-		DecCacheThread (mrsiparam->uparam);
+		RequestManager::DecCacheThread ();
 
 		if (fmess.length () == 0)
 		{
-			Rain::RainCout << "MarkRequestStoreImage request returned empty, retrying\n";
-			MarkRequestStoreImage (mrsiparam->code, mrsiparam->uparam);
+			Rain::RainCout << "MarkRequestStoreImage request returned empty, retrying" << std::endl;
+			MarkRequestStoreImage (mrsiparam->code);
 		}
 		else
 		{
@@ -57,13 +55,11 @@ namespace PixivBot
 				if (fmess.find ("ugokuIllustData") != std::string::npos)
 					Rain::RainCout << "MANUAL CONFIMATION (VIDEO): " <<  mrsiparam->code << std::endl;
 
-				mrsiparam->uparam->munivparam.lock ();
-				mrsiparam->uparam->inqueue->erase (mrsiparam->code);
-				mrsiparam->uparam->processed->insert (mrsiparam->code);
-				mrsiparam->uparam->awaiting->erase (mrsiparam->code);
-				mrsiparam->uparam->munivparam.unlock ();
+				ImageManager::inqueue.erase (mrsiparam->code);
+				ImageManager::processed.insert (mrsiparam->code);
+				ImageManager::awaiting.erase (mrsiparam->code);
 
-				PostMessage (mrsiparam->uparam->imagewnd->hwnd, RAIN_IMAGECHANGE, 0, 0);
+				PostMessage (ImageWnd::image_wnd.hwnd, RAIN_IMAGECHANGE, 0, 0);
 				FreeAndCloseMRSI (mrsiparam);
 				return;
 			}
@@ -74,17 +70,15 @@ namespace PixivBot
 			if (orig == std::string::npos)
 			{
 				if (fmess.find ("mode=manga") != std::string::npos) //is a manga/multiple image submission
-					MarkParseMangaSubmission (mrsiparam->code, mrsiparam->uparam);
+					MarkParseMangaSubmission (mrsiparam->code);
 				else //we have a problem
 				{
 					Rain::RainCout << "MANUAL CONFIMATION (???): " << mrsiparam->code << std::endl;
-					mrsiparam->uparam->munivparam.lock ();
-					mrsiparam->uparam->inqueue->erase (mrsiparam->code);
-					mrsiparam->uparam->processed->insert (mrsiparam->code);
-					mrsiparam->uparam->awaiting->erase (mrsiparam->code);
-					mrsiparam->uparam->munivparam.unlock ();
+					ImageManager::inqueue.erase (mrsiparam->code);
+					ImageManager::processed.insert (mrsiparam->code);
+					ImageManager::awaiting.erase (mrsiparam->code);
 
-					PostMessage (mrsiparam->uparam->imagewnd->hwnd, RAIN_IMAGECHANGE, 0, 0);
+					PostMessage (ImageWnd::image_wnd.hwnd, RAIN_IMAGECHANGE, 0, 0);
 					FreeAndCloseMRSI (mrsiparam);
 					return;
 				}
@@ -92,19 +86,17 @@ namespace PixivBot
 			else //single image submission
 			{
 				//create vector in bsfq for image name storage
-				mrsiparam->uparam->munivparam.lock ();
-				mrsiparam->uparam->bfsq->push (std::make_pair (mrsiparam->code, new std::vector<std::string> ()));
-				mrsiparam->uparam->munivparam.unlock ();
+				ImageManager::image_queue.push (std::make_pair (mrsiparam->code, new std::vector<std::string> ()));
 
 				orig = fmess.find ("data-src=\"", orig) + 10;
-				MarkDownloadSingleImage (fmess.substr (orig, fmess.find ("\"", orig) - orig), "http://www.pixiv.net/member_illust.php?mode=medium&illust_id=" + Rain::TToStr (mrsiparam->code), mrsiparam->uparam->bfsq->back ().second, mrsiparam->uparam);
+				MarkDownloadSingleImage (fmess.substr (orig, fmess.find ("\"", orig) - orig), "http://www.pixiv.net/member_illust.php?mode=medium&illust_id=" + Rain::TToStr (mrsiparam->code), ImageManager::image_queue.back ().second);
 			}
 		}
 
 		FreeAndCloseMRSI (mrsiparam);
 	}
 
-	int MarkParseMangaSubmission (int code, UnivParam *uparam)
+	int MarkParseMangaSubmission (int code)
 	{
 		Rain::WSARecvParam *recvparam = new Rain::WSARecvParam ();
 		MRSIParam *mrsiparam = new MRSIParam ();
@@ -121,7 +113,7 @@ namespace PixivBot
 		mrsiparam->code = code;
 		recvparam->OnRecvEnd = OnMPMSExit;
 
-		PrepMRSIParams (mrsiparam, recvparam, uparam);
+		PrepMRSIParams (mrsiparam, recvparam);
 
 		Rain::SendText (*(mrsiparam->conn), getreq.c_str (), getreq.length ());
 		return 0;
@@ -131,12 +123,12 @@ namespace PixivBot
 		MRSIParam *mrsiparam = reinterpret_cast<MRSIParam *>(param);
 		std::string &fmess = *(mrsiparam->fmess);
 
-		DecCacheThread (mrsiparam->uparam);
+		RequestManager::DecCacheThread ();
 
 		if (fmess.length () == 0)
 		{
-			Rain::RainCout << "MarkParseMangaSubmission request returned empty, retrying\n";
-			MarkParseMangaSubmission (mrsiparam->code, mrsiparam->uparam);
+			Rain::RainCout << "MarkParseMangaSubmission request returned empty, retrying" << std::endl;
+			MarkParseMangaSubmission (mrsiparam->code);
 		}
 		else
 		{
@@ -151,19 +143,17 @@ namespace PixivBot
 				search = fmess.find ("full-size-container _ui-tooltip", search + 1);
 			}
 
-			mrsiparam->uparam->munivparam.lock ();
 			//create bfsq vector
-			mrsiparam->uparam->bfsq->push (std::make_pair (mrsiparam->code, new std::vector<std::string> ()));
-			mrsiparam->uparam->munivparam.unlock ();
+			ImageManager::image_queue.push (std::make_pair (mrsiparam->code, new std::vector<std::string> ()));
 
 			for (int a = 0;a < images;a++)
-				MarkParseMangaBigImage (mrsiparam->code, a, mrsiparam->uparam->bfsq->back ().second, mrsiparam->uparam);
+				MarkParseMangaBigImage (mrsiparam->code, a, ImageManager::image_queue.back ().second);
 		}
 
 		FreeAndCloseMRSI (mrsiparam);
 	}
 
-	int MarkParseMangaBigImage (int code, int index, std::vector<std::string> *namevec, UnivParam *uparam)
+	int MarkParseMangaBigImage (int code, int index, std::vector<std::string> *namevec)
 	{
 		Rain::WSARecvParam *recvparam = new Rain::WSARecvParam ();
 		MRSIParam *mrsiparam = new MRSIParam ();
@@ -182,7 +172,7 @@ namespace PixivBot
 		mrsiparam->namevec = namevec;
 		recvparam->OnRecvEnd = OnMPMBIExit;
 
-		PrepMRSIParams (mrsiparam, recvparam, uparam);
+		PrepMRSIParams (mrsiparam, recvparam);
 
 		Rain::SendText (*(mrsiparam->conn), getreq.c_str (), getreq.length ());
 		return 0;
@@ -192,12 +182,12 @@ namespace PixivBot
 		MRSIParam *mrsiparam = reinterpret_cast<MRSIParam *>(param);
 		std::string &fmess = *(mrsiparam->fmess);
 
-		DecCacheThread (mrsiparam->uparam);
+		RequestManager::DecCacheThread ();
 
 		if (fmess.length () == 0)
 		{
-			Rain::RainCout << "MarkParseMangaBigImage request returned empty, retrying\n";
-			MarkParseMangaBigImage (mrsiparam->code, mrsiparam->index, mrsiparam->namevec, mrsiparam->uparam);
+			Rain::RainCout << "MarkParseMangaBigImage request returned empty, retrying" << std::endl;
+			MarkParseMangaBigImage (mrsiparam->code, mrsiparam->index, mrsiparam->namevec);
 		}
 		else
 		{
@@ -207,13 +197,13 @@ namespace PixivBot
 
 			search = fmess.find ("img src=\"") + 9;
 
-			MarkDownloadSingleImage (fmess.substr (search, fmess.find ("\"", search) - search), "http://www.pixiv.net/member_illust.php?mode=manga_big&illust_id=" + Rain::TToStr (mrsiparam->code) + "&page=" + Rain::TToStr (mrsiparam->index), mrsiparam->namevec, mrsiparam->uparam);
+			MarkDownloadSingleImage (fmess.substr (search, fmess.find ("\"", search) - search), "http://www.pixiv.net/member_illust.php?mode=manga_big&illust_id=" + Rain::TToStr (mrsiparam->code) + "&page=" + Rain::TToStr (mrsiparam->index), mrsiparam->namevec);
 		}
 
 		FreeAndCloseMRSI (mrsiparam);
 	}
 
-	int MarkDownloadSingleImage (std::string link, std::string referer, std::vector<std::string> *namevec, UnivParam *uparam)
+	int MarkDownloadSingleImage (std::string link, std::string referer, std::vector<std::string> *namevec)
 	{
 		Rain::WSARecvParam *recvparam = new Rain::WSARecvParam ();
 		MRSIParam *mrsiparam = new MRSIParam ();
@@ -233,11 +223,11 @@ namespace PixivBot
 
 		if (Rain::FileExists (Settings::cache_dir + mrsiparam->imagename))
 		{
-			Rain::RainCout << "discovered " << mrsiparam->imagename << " in cache, skipping\n";
+			Rain::RainCout << "discovered " << mrsiparam->imagename << " in cache, skipping" << std::endl;
 			mrsiparam->namevec->push_back (mrsiparam->imagename);
 
-			if (uparam->imagewnd->hwnd != NULL)
-				PostMessage (uparam->imagewnd->hwnd, RAIN_IMAGECHANGE, 0, 0);
+			if (ImageWnd::image_wnd.hwnd != NULL)
+				PostMessage (ImageWnd::image_wnd.hwnd, RAIN_IMAGECHANGE, 0, 0);
 
 			delete mrsiparam->conn;
 			delete mrsiparam;
@@ -258,7 +248,7 @@ namespace PixivBot
 			std::string getreq;
 			getreq = "GET " + rellink + " HTTP/1.1\nHost: " + host + "\nReferer: " + referer + "\n" + Settings::http_req_header[Settings::safe_mode][2] + "\n";
 
-			PrepMRSIParams (mrsiparam, recvparam, uparam);
+			PrepMRSIParams (mrsiparam, recvparam);
 
 			Rain::SendText (*(mrsiparam->conn), getreq.c_str (), getreq.length ());
 		}
@@ -270,14 +260,14 @@ namespace PixivBot
 		MRSIParam *mrsiparam = reinterpret_cast<MRSIParam *>(param);
 		std::string &fmess = *(mrsiparam->fmess);
 
-		DecCacheThread (mrsiparam->uparam);
+		RequestManager::DecCacheThread ();
 
 		if (fmess.length () == 0)
 		{
-			Rain::RainCout << "MarkDownloadSingleImage request returned empty, retrying\n";
+			Rain::RainCout << "MarkDownloadSingleImage request returned empty, retrying" << std::endl;
 
 			//resend MDSI request
-			MarkDownloadSingleImage (mrsiparam->link, mrsiparam->referer, mrsiparam->namevec, mrsiparam->uparam);
+			MarkDownloadSingleImage (mrsiparam->link, mrsiparam->referer, mrsiparam->namevec);
 		}
 		else
 		{
@@ -289,14 +279,14 @@ namespace PixivBot
 			Rain::RainCout << "cached " << mrsiparam->imagename << std::endl;
 
 			//update the image window with the newly loaded image
-			if (mrsiparam->uparam->imagewnd->hwnd != NULL)
-				PostMessage (mrsiparam->uparam->imagewnd->hwnd, RAIN_IMAGECHANGE, 0, 0);
+			if (ImageWnd::image_wnd.hwnd != NULL)
+				PostMessage (ImageWnd::image_wnd.hwnd, RAIN_IMAGECHANGE, 0, 0);
 		}
 
 		FreeAndCloseMRSI (mrsiparam);
 	}
 
-	int MarkRequestStoreRecommendations (int code, UnivParam *uparam)
+	int MarkRequestStoreRecommendations (int code)
 	{
 		Rain::WSARecvParam *recvparam = new Rain::WSARecvParam ();
 		MRSIParam *mrsiparam = new MRSIParam ();
@@ -313,7 +303,7 @@ namespace PixivBot
 		mrsiparam->code = code;
 		recvparam->OnRecvEnd = OnMRSRExit;
 
-		PrepMRSIParams (mrsiparam, recvparam, uparam);
+		PrepMRSIParams (mrsiparam, recvparam);
 
 		Rain::SendText (*(mrsiparam->conn), getreq.c_str (), getreq.length ());
 		return 0;
@@ -323,12 +313,12 @@ namespace PixivBot
 		MRSIParam *mrsiparam = reinterpret_cast<MRSIParam *>(param);
 		std::string &fmess = *(mrsiparam->fmess);
 
-		DecCacheThread (mrsiparam->uparam);
+		RequestManager::DecCacheThread ();
 
 		if (fmess.length () == 0)
 		{
-			Rain::RainCout << "MarkRequestStoreRecommendations request returned empty, retrying\n";
-			MarkRequestStoreRecommendations (mrsiparam->code, mrsiparam->uparam);
+			Rain::RainCout << "MarkRequestStoreRecommendations request returned empty, retrying" << std::endl;
+			MarkRequestStoreRecommendations (mrsiparam->code);
 		}
 		else
 		{
@@ -344,20 +334,18 @@ namespace PixivBot
 					rec_counter++;
 			}
 
-			mrsiparam->uparam->munivparam.lock ();
 			for (std::size_t a = 0;a < recs.size ();a++)
-				if (mrsiparam->uparam->processed->find (recs[a]) == mrsiparam->uparam->processed->end () &&
-					mrsiparam->uparam->inqueue->find (recs[a]) == mrsiparam->uparam->inqueue->end ())
-					mrsiparam->uparam->awaiting->insert (recs[a]);
-			mrsiparam->uparam->munivparam.unlock ();
+				if (ImageManager::processed.find (recs[a]) == ImageManager::processed.end () &&
+					ImageManager::inqueue.find (recs[a]) == ImageManager::inqueue.end ())
+						ImageManager::awaiting.insert (recs[a]);
 
-			if (mrsiparam->uparam->imagewnd->hwnd != NULL)
-				SendMessage (mrsiparam->uparam->imagewnd->hwnd, RAIN_IMAGECHANGE, 0, 0);
+			if (ImageWnd::image_wnd.hwnd != NULL)
+				SendMessage (ImageWnd::image_wnd.hwnd, RAIN_IMAGECHANGE, 0, 0);
 
 			for (std::size_t a = 0;a < recs.size ();a++)
-				if (mrsiparam->uparam->processed->find (recs[a]) == mrsiparam->uparam->processed->end () && 
-					mrsiparam->uparam->inqueue->find (recs[a]) == mrsiparam->uparam->inqueue->end ())
-					MarkRequestStoreImage (recs[a], mrsiparam->uparam);
+				if (ImageManager::processed.find (recs[a]) == ImageManager::processed.end () &&
+					ImageManager::inqueue.find (recs[a]) == ImageManager::inqueue.end ())
+					MarkRequestStoreImage (recs[a]);
 		}
 
 		FreeAndCloseMRSI (mrsiparam);
@@ -367,14 +355,13 @@ namespace PixivBot
 	{
 		MRSIParam *mrsiparam = reinterpret_cast<MRSIParam *>(param);
 
-		IncCacheThread (mrsiparam->uparam);
+		RequestManager::IncCacheThread ();
 	}
 
-	void PrepMRSIParams (MRSIParam *mrsiparam, Rain::WSARecvParam *recvparam, UnivParam *uparam)
+	void PrepMRSIParams (MRSIParam *mrsiparam, Rain::WSARecvParam *recvparam)
 	{
 		mrsiparam->fmess = new std::string ();
 		mrsiparam->recvparam = recvparam;
-		mrsiparam->uparam = uparam;
 
 		recvparam->buflen = 1024;
 		recvparam->funcparam = mrsiparam;
@@ -386,8 +373,8 @@ namespace PixivBot
 		Rain::CreateRecvThread (recvparam);
 
 		//prevents sending of requests until threads are open
-		uparam->mcthread.lock ();
-		uparam->mcthread.unlock ();
+		RequestManager::mcthread.lock ();
+		RequestManager::mcthread.unlock ();
 
 		Rain::RainCout << "sending request" << std::endl;
 	}
@@ -406,7 +393,7 @@ namespace PixivBot
 	DWORD WINAPI MRSRThread (LPVOID param)
 	{
 		MRSIParam &mrsiparam = *reinterpret_cast<MRSIParam *>(param);
-		MarkRequestStoreRecommendations (mrsiparam.code, mrsiparam.uparam);
+		MarkRequestStoreRecommendations (mrsiparam.code);
 		delete &mrsiparam;
 		return 0;
 	}

@@ -164,7 +164,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="ImgWndProc.h" />
+    <ClInclude Include="ImageManager.h" />
+    <ClInclude Include="ImageWnd.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="MRSIParam.h" />
     <ClInclude Include="Rain Standard Library\RainError.h" />
@@ -179,12 +180,11 @@
     <ClInclude Include="Rain Standard Library\RainWSA2Include.h" />
     <ClInclude Include="Rain Standard Library\RainWSA2SendRecv.h" />
     <ClInclude Include="Rain Standard Library\RainWSA2Utility.h" />
+    <ClInclude Include="RequestManager.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="MarkRequestStoreImage.h" />
-    <ClInclude Include="SendHandler.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="Start.h" />
-    <ClInclude Include="UnivParam.h" />
     <ClInclude Include="VersionBuildInc.h" />
     <ClInclude Include="VersionID.h" />
   </ItemGroup>
@@ -192,9 +192,11 @@
     <ResourceCompile Include="resource.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ImgWndProc.cpp" />
+    <ClCompile Include="ImageManager.cpp" />
+    <ClCompile Include="ImageWnd.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MarkRequestStoreImage.cpp" />
+    <ClCompile Include="MRSIParam.cpp" />
     <ClCompile Include="Rain Standard Library\RainError.cpp" />
     <ClCompile Include="Rain Standard Library\RainGdiplusInclude.cpp" />
     <ClCompile Include="Rain Standard Library\RainLibraries.cpp" />
@@ -207,10 +209,9 @@
     <ClCompile Include="Rain Standard Library\RainWSA2Include.cpp" />
     <ClCompile Include="Rain Standard Library\RainWSA2SendRecv.cpp" />
     <ClCompile Include="Rain Standard Library\RainWSA2Utility.cpp" />
-    <ClCompile Include="SendHandler.cpp" />
+    <ClCompile Include="RequestManager.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="Start.cpp" />
-    <ClCompile Include="UnivParam.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\readme.txt">

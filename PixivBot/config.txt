@@ -1,14 +1,12 @@
 http://www.pixiv.net/member_illust.php?mode=medium&illust_id=53107233
-http://www.pixiv.net/member_illust.php?mode=medium&illust_id=50434270
-http://www.pixiv.net/member_illust.php?mode=manga&illust_id=57958879
-http://www.pixiv.net/member_illust.php?mode=manga&illust_id=58393060
-http://www.pixiv.net/member_illust.php?mode=medium&illust_id=56478475
-http://www.pixiv.net/member_illust.php?mode=manga&illust_id=51909093
-http://www.pixiv.net/member_illust.php?mode=medium&illust_id=58148421
-http://www.pixiv.net/member_illust.php?mode=medium&illust_id=58371429
-http://www.pixiv.net/member_illust.php?mode=medium&illust_id=58754390
 http://www.pixiv.net/member_illust.php?mode=medium&illust_id=58256965
-http://www.pixiv.net/member_illust.php?mode=manga&illust_id=58371429
+http://www.pixiv.net/member_illust.php?mode=medium&illust_id=50434270
+http://www.pixiv.net/member_illust.php?mode=medium&illust_id=57958879
+http://www.pixiv.net/member_illust.php?mode=medium&illust_id=58148421
+http://www.pixiv.net/member_illust.php?mode=medium&illust_id=58393060
+http://www.pixiv.net/member_illust.php?mode=medium&illust_id=56478475
+http://www.pixiv.net/member_illust.php?mode=medium&illust_id=51909093
+http://www.pixiv.net/member_illust.php?mode=medium&illust_id=58754390
 http://www.pixiv.net/member_illust.php?mode=medium&illust_id=56305899
 http://www.pixiv.net/member_illust.php?mode=medium&illust_id=57080241
 

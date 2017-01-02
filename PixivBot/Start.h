@@ -2,11 +2,9 @@
 
 #define OEMRESOURCE
 
-#include "ImgWndProc.h"
+#include "ImageWnd.h"
 #include "MarkRequestStoreImage.h"
-#include "SendHandler.h"
 #include "Settings.h"
-#include "UnivParam.h"
 #include "resource.h"
 
 #include "RainLibraries.h"

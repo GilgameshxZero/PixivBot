@@ -1,7 +1,5 @@
 #pragma once
 
-#include "UnivParam.h"
-
 #include "RainLibraries.h"
 
 #include <string>
@@ -16,7 +14,6 @@ namespace PixivBot
 			Rain::WSARecvParam *recvparam;
 			SOCKET *conn;
 			int code;
-			UnivParam *uparam;
 			int index;
 			std::string imagename;
 			std::vector<std::string> *namevec;
