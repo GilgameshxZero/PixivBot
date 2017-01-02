@@ -1,0 +1,5 @@
+*.iobj
+*.ipdb
+*.pdb
+*.ilk
+*Debug*.exe
