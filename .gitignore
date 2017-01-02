@@ -3,3 +3,4 @@
 *.pdb
 *.ilk
 *Debug*.exe
+*.suo

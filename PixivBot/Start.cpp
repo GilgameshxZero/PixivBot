@@ -14,7 +14,7 @@ namespace PixivBot
 			WSADATA wsa_data;
 
 			UnivParam uparam;
-			Rain::RainWindow imagewnd, *sendhwnd;
+			Rain::RainWindow imagewnd;
 			std::unordered_map<UINT, Rain::RainWindow::MSGFC> imagewndhandler;
 			Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 			ULONG_PTR gdiplusToken;
@@ -143,12 +143,6 @@ namespace PixivBot
 				processed.insert (Rain::StrToT<int> (tmpprocessed[a].substr (0, tmpprocessed[a].find ("_"))));
 
 			//create window before cache is complete, so that we can process images while they are cached in
-			sendhandler.insert (std::make_pair (RAIN_SHACCEPT, SendHandler::OnAccept));
-			sendhandler.insert (std::make_pair (RAIN_SHREJECT, SendHandler::OnReject));
-			sendhwnd = Rain::CreateSendHandler (&sendhandler);
-			uparam.sendhwnd = sendhwnd;
-			SetWindowLongPtr (sendhwnd->hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(&uparam));
-
 			imagewndhandler.insert (std::make_pair (WM_CLOSE, ImgWndProc::OnClose));
 			imagewndhandler.insert (std::make_pair (WM_KEYDOWN, ImgWndProc::OnKeyDown));
 			imagewndhandler.insert (std::make_pair (WM_KEYUP, ImgWndProc::OnKeyUp));
@@ -207,7 +201,6 @@ namespace PixivBot
 			std::cin.get ();
 
 			imagewnd.~RainWindow ();
-			delete sendhwnd;
 
 			freeaddrinfo (p_saddrinfo_www);
 			Gdiplus::GdiplusShutdown (gdiplusToken);

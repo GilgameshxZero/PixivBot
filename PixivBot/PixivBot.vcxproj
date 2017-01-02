@@ -183,7 +183,6 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="MarkRequestStoreImage.h" />
     <ClInclude Include="SendHandler.h" />
-    <ClInclude Include="SendHandlerDef.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="Start.h" />
     <ClInclude Include="UnivParam.h" />
@@ -211,7 +210,6 @@
     <ClCompile Include="Rain Standard Library\RainWSA2SendRecv.cpp" />
     <ClCompile Include="Rain Standard Library\RainWSA2Utility.cpp" />
     <ClCompile Include="SendHandler.cpp" />
-    <ClCompile Include="SendHandlerDef.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="Start.cpp" />
     <ClCompile Include="UnivParam.cpp" />
@@ -268,6 +266,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="prog_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\.gitignore" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

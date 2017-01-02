@@ -28,3 +28,5 @@
 	added to github version control
 	added future directions file to list features/bugs to do
 	exclude txt files from build
+1.1.3
+	
