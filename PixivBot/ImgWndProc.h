@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ImgWndProcDef.h"
-#include "SendHandlerDef.h"
+#include "SendHandler.h"
 #include "Settings.h"
 #include "UnivParam.h"
 

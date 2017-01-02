@@ -16,7 +16,7 @@ namespace PixivBot
 	class UnivParam
 	{
 		public:
-			Rain::RainWindow *sendhwnd, *imagewnd;
+			Rain::RainWindow *imagewnd;
 			std::queue< std::pair<int, std::vector<std::string> *> > *bfsq;
 			std::string lastload;
 			std::unordered_set<int> *processed, *inqueue, *awaiting;

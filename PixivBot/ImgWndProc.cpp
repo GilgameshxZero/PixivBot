@@ -19,9 +19,9 @@ namespace PixivBot
 			if (!*uparam->imgwndready)
 				return 0;
 			if (wparam == VK_LEFT)
-				PostMessage (uparam->sendhwnd->hwnd, RAIN_SHREJECT, 0, 0);
+				SendHandler::OnReject (uparam);
 			if (wparam == VK_RIGHT)
-				PostMessage (uparam->sendhwnd->hwnd, RAIN_SHACCEPT, 0, 0);
+				SendHandler::OnAccept (uparam);
 			if (wparam == VK_ESCAPE)
 				PostMessage (hwnd, RAIN_CLOSEIMGWND, 1, 0);
 			return 0;

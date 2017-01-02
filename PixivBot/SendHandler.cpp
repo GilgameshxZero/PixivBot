@@ -4,12 +4,10 @@ namespace PixivBot
 {
 	namespace SendHandler
 	{
-		LRESULT OnReject (HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
+		void OnReject (UnivParam *uparam)
 		{
-			UnivParam *uparam = reinterpret_cast<UnivParam *>(GetWindowLongPtr (hwnd, GWLP_USERDATA));
-
 			if (uparam->bfsq->size () == 0 || uparam->bfsq->front ().second->size () == 0) //images are still loading
-				return 0;
+				return;
 
 			Rain::RainCout << "rejected " << uparam->bfsq->front ().second->front () << "\n";
 
@@ -31,15 +29,12 @@ namespace PixivBot
 
 			//set new image
 			SendMessage (uparam->imagewnd->hwnd, RAIN_IMAGECHANGE, 0, 0);
-
-			return 0;
 		}
-		LRESULT OnAccept (HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
-		{
-			UnivParam *uparam = reinterpret_cast<UnivParam *>(GetWindowLongPtr (hwnd, GWLP_USERDATA));
 
+		void OnAccept (UnivParam *uparam)
+		{
 			if (uparam->bfsq->size () == 0 || uparam->bfsq->front ().second->size () == 0) //images are still loading
-				return 0;
+				return;
 
 			Rain::RainCout << "accepted " << uparam->bfsq->front ().second->front () << "\n";
 
@@ -68,8 +63,6 @@ namespace PixivBot
 			mrsiparam->code = code;
 			mrsiparam->uparam = uparam;
 			Rain::SimpleCreateThread (MRSRThread, reinterpret_cast<LPVOID>(mrsiparam));
-
-			return 0;
 		}
 	}
 }
