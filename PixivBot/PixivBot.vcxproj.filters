@@ -16,7 +16,7 @@
     <Filter Include="Other">
       <UniqueIdentifier>{49881c99-18c6-448d-9178-7cf1368e633d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Rain Standard Libraries">
+    <Filter Include="Rain Standard Library">
       <UniqueIdentifier>{21c66f71-bc8b-472a-a733-059c69ff56ef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -60,41 +60,41 @@
     <ClInclude Include="Settings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainError.h">
-      <Filter>Rain Standard Libraries</Filter>
+    <ClInclude Include="Rain Standard Library\RainError.h">
+      <Filter>Rain Standard Library</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainWindow.h">
-      <Filter>Rain Standard Libraries</Filter>
+    <ClInclude Include="Rain Standard Library\RainGdiplusInclude.h">
+      <Filter>Rain Standard Library</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainUtility.h">
-      <Filter>Rain Standard Libraries</Filter>
+    <ClInclude Include="Rain Standard Library\RainLibraries.h">
+      <Filter>Rain Standard Library</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainWSA2.h">
-      <Filter>Rain Standard Libraries</Filter>
+    <ClInclude Include="Rain Standard Library\RainLogging.h">
+      <Filter>Rain Standard Library</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainGdiplusInclude.h">
-      <Filter>Rain Standard Libraries</Filter>
+    <ClInclude Include="Rain Standard Library\RainUtility.h">
+      <Filter>Rain Standard Library</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainWindowsLAM.h">
-      <Filter>Rain Standard Libraries</Filter>
+    <ClInclude Include="Rain Standard Library\RainUtilityFile.h">
+      <Filter>Rain Standard Library</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainLibraries.h">
-      <Filter>Rain Standard Libraries</Filter>
+    <ClInclude Include="Rain Standard Library\RainWindow.h">
+      <Filter>Rain Standard Library</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainWSA2Utility.h">
-      <Filter>Rain Standard Libraries</Filter>
+    <ClInclude Include="Rain Standard Library\RainWindowsLAM.h">
+      <Filter>Rain Standard Library</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainWSA2SendRecv.h">
-      <Filter>Rain Standard Libraries</Filter>
+    <ClInclude Include="Rain Standard Library\RainWSA2.h">
+      <Filter>Rain Standard Library</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainWSA2Include.h">
-      <Filter>Rain Standard Libraries</Filter>
+    <ClInclude Include="Rain Standard Library\RainWSA2Include.h">
+      <Filter>Rain Standard Library</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainLogging.h">
-      <Filter>Rain Standard Libraries</Filter>
+    <ClInclude Include="Rain Standard Library\RainWSA2SendRecv.h">
+      <Filter>Rain Standard Library</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainUtilityFile.h">
-      <Filter>Rain Standard Libraries</Filter>
+    <ClInclude Include="Rain Standard Library\RainWSA2Utility.h">
+      <Filter>Rain Standard Library</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -130,41 +130,41 @@
     <ClCompile Include="Settings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainError.cpp">
-      <Filter>Rain Standard Libraries</Filter>
+    <ClCompile Include="Rain Standard Library\RainError.cpp">
+      <Filter>Rain Standard Library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainWindow.cpp">
-      <Filter>Rain Standard Libraries</Filter>
+    <ClCompile Include="Rain Standard Library\RainGdiplusInclude.cpp">
+      <Filter>Rain Standard Library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainUtility.cpp">
-      <Filter>Rain Standard Libraries</Filter>
+    <ClCompile Include="Rain Standard Library\RainLibraries.cpp">
+      <Filter>Rain Standard Library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainWSA2.cpp">
-      <Filter>Rain Standard Libraries</Filter>
+    <ClCompile Include="Rain Standard Library\RainLogging.cpp">
+      <Filter>Rain Standard Library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainGdiplusInclude.cpp">
-      <Filter>Rain Standard Libraries</Filter>
+    <ClCompile Include="Rain Standard Library\RainUtility.cpp">
+      <Filter>Rain Standard Library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainWindowsLAM.cpp">
-      <Filter>Rain Standard Libraries</Filter>
+    <ClCompile Include="Rain Standard Library\RainUtilityFile.cpp">
+      <Filter>Rain Standard Library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainLibraries.cpp">
-      <Filter>Rain Standard Libraries</Filter>
+    <ClCompile Include="Rain Standard Library\RainWindow.cpp">
+      <Filter>Rain Standard Library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainWSA2Utility.cpp">
-      <Filter>Rain Standard Libraries</Filter>
+    <ClCompile Include="Rain Standard Library\RainWindowsLAM.cpp">
+      <Filter>Rain Standard Library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainWSA2SendRecv.cpp">
-      <Filter>Rain Standard Libraries</Filter>
+    <ClCompile Include="Rain Standard Library\RainWSA2.cpp">
+      <Filter>Rain Standard Library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainWSA2Include.cpp">
-      <Filter>Rain Standard Libraries</Filter>
+    <ClCompile Include="Rain Standard Library\RainWSA2Include.cpp">
+      <Filter>Rain Standard Library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainUtilityFile.cpp">
-      <Filter>Rain Standard Libraries</Filter>
+    <ClCompile Include="Rain Standard Library\RainWSA2SendRecv.cpp">
+      <Filter>Rain Standard Library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainLogging.cpp">
-      <Filter>Rain Standard Libraries</Filter>
+    <ClCompile Include="Rain Standard Library\RainWSA2Utility.cpp">
+      <Filter>Rain Standard Library</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +181,12 @@
       <Filter>Other</Filter>
     </Text>
     <Text Include="pixivbot_error.txt">
+      <Filter>Other</Filter>
+    </Text>
+    <Text Include="readme.txt">
+      <Filter>Other</Filter>
+    </Text>
+    <Text Include="notes.txt">
       <Filter>Other</Filter>
     </Text>
   </ItemGroup>
