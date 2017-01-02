@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ImgWndProcDef.h"
 #include "SendHandler.h"
 #include "Settings.h"
 #include "UnivParam.h"
@@ -8,6 +7,9 @@
 #include "RainLibraries.h"
 
 #include <iostream>
+
+#define RAIN_IMAGECHANGE	WM_RAINAVAILABLE
+#define RAIN_CLOSEIMGWND	WM_RAINAVAILABLE + 1 //post when window is to be closed; WPARAM is exit code
 
 namespace PixivBot
 {

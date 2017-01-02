@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ImgWndProcDef.h"
+#include "ImgWndProc.h"
 #include "MRSIParam.h"
 #include "Settings.h"
 #include "Start.h"

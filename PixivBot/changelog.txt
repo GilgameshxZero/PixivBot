@@ -29,4 +29,6 @@
 	added future directions file to list features/bugs to do
 	exclude txt files from build
 1.1.3
-	code refactoring: removed the sendhandler window, and made OnAccept/OnReject just function
+	code refactoring:
+		removed the sendhandler window, and made OnAccept/OnReject just functions
+		removed ImgWndProcDef files

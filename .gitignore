@@ -4,3 +4,5 @@
 *.ilk
 *Debug*.exe
 *.suo
+*.png
+*.jpg

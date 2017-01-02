@@ -165,7 +165,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ImgWndProc.h" />
-    <ClInclude Include="ImgWndProcDef.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="MRSIParam.h" />
     <ClInclude Include="Rain Standard Library\RainError.h" />
@@ -194,7 +193,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ImgWndProc.cpp" />
-    <ClCompile Include="ImgWndProcDef.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MarkRequestStoreImage.cpp" />
     <ClCompile Include="Rain Standard Library\RainError.cpp" />

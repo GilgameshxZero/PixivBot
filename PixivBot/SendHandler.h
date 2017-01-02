@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ImgWndProcDef.h"
+#include "ImgWndProc.h"
 #include "MarkRequestStoreImage.h"
 #include "UnivParam.h"
 
