@@ -135,7 +135,7 @@ namespace PixivBot
 			UpdateWindow (ImageWnd::image_wnd.hwnd);
 			ShowWindow (ImageWnd::image_wnd.hwnd, SW_SHOWMAXIMIZED);
 
-			Rain::SimpleCreateThread (ImageManager::CacheInitImages, NULL);
+			Rain::SimpleCreateThread (ImageManager::CacheInitImages, &img_queue_init);
 
 			while ((bRet = GetMessage (&msg, NULL, 0, 0)) != 0)
 			{

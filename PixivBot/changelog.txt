@@ -34,3 +34,4 @@
 		removed ImgWndProcDef files
 		removed UnivParam and spread variables amoung RequestManager and ImageManager
 		renamed variables and functions
+		removed dependency on MRSIParam

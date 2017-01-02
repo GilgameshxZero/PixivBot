@@ -5,26 +5,31 @@ namespace PixivBot
 	int MarkRequestStoreImage (int code)
 	{
 		Rain::WSARecvParam *recvparam = new Rain::WSARecvParam ();
-		MRSIParam *mrsiparam = new MRSIParam ();
-		mrsiparam->conn = new SOCKET ();
 
-		//add to the queue here so that we don't send unnecessary requests
+		recvparam->funcparam = Rain::PackPointers (recvparam, new std::string (), new int (code));
+		recvparam->OnRecvEnd = OnMRSIExit;
+
+		recvparam->OnProcessMessage = RequestManager::StoreFullReqMessage;
+
+		recvparam->buflen = 1024;
+		recvparam->message = new std::string ();
+		recvparam->sock = new SOCKET ();
+		recvparam->OnRecvInit = OnMRSIInit;
+
+		//add to the queue here so that we don't send unnecessary requests; queue checking is not done here
 		ImageManager::in_img_queue.insert (code);
 
-		if (Rain::CreateClientSocket (&Start::p_saddrinfo_www, *(mrsiparam->conn)))
+		if (Rain::CreateClientSocket (&Start::p_saddrinfo_www, *recvparam->sock))
 			return -1;
-		if (Rain::ConnToServ (&Start::p_saddrinfo_www, *(mrsiparam->conn)))
+		if (Rain::ConnToServ (&Start::p_saddrinfo_www, *recvparam->sock))
 			return -2;
 
-		std::string getreq;
-		getreq = "GET /member_illust.php?mode=medium&illust_id=" + Rain::TToStr (code) + " HTTP/1.1\nHost: www.pixiv.net\n" + Settings::http_req_header[Settings::safe_mode][0] + "\n";
+		Rain::CreateRecvThread (recvparam);
 
-		recvparam->OnRecvEnd = OnMRSIExit;
-		mrsiparam->code = code;
+		RequestManager::BlockForThreads ();
+		Rain::RainCout << "sending request" << std::endl;
+		Rain::SendText (*recvparam->sock, "GET /member_illust.php?mode=medium&illust_id=" + Rain::TToStr (code) + " HTTP/1.1\nHost: www.pixiv.net\n" + Settings::http_req_header[Settings::safe_mode][0] + "\n");
 
-		PrepMRSIParams (mrsiparam, recvparam);
-
-		Rain::SendText (*(mrsiparam->conn), getreq.c_str (), getreq.length ());
 		return 0;
 	}
 	int OnMRSIMessage (void *param)
@@ -35,65 +40,68 @@ namespace PixivBot
 	}
 	void OnMRSIExit (void *param)
 	{
-		MRSIParam *mrsiparam = reinterpret_cast<MRSIParam *>(param);
-		std::string &fmess = *(mrsiparam->fmess);
+		std::vector<void *> &funcparam = *reinterpret_cast<std::vector<void *> *>(param);
+		Rain::WSARecvParam &recvparam = *reinterpret_cast<Rain::WSARecvParam *>(funcparam[0]);
+		std::string &full_message = *reinterpret_cast<std::string *>(funcparam[1]);
+		int &code = *reinterpret_cast<int *>(funcparam[2]);
 
 		RequestManager::DecReqThread ();
 
-		if (fmess.length () == 0)
+		if (full_message.length () == 0)
 		{
 			Rain::RainCout << "MarkRequestStoreImage request returned empty, retrying" << std::endl;
-			MarkRequestStoreImage (mrsiparam->code);
+			MarkRequestStoreImage (code);
 		}
 		else
 		{
-			if ((Settings::safe_mode && fmess.find ("Access by users under age 18 is restricted.") != std::string::npos) || //check safety because recommender doesn't do that
-				(fmess.find ("Artist has made their work private.") != std::string::npos) ||  //check for private works
-				(fmess.find ("ugokuIllustData") != std::string::npos) || //check for gif works
-				(fmess.find ("This work was deleted.") != std::string::npos)) //deleted work
+			if ((Settings::safe_mode && full_message.find ("Access by users under age 18 is restricted.") != std::string::npos) || //check safety because recommender doesn't do that
+				(full_message.find ("Artist has made their work private.") != std::string::npos) ||  //check for private works
+				(full_message.find ("ugokuIllustData") != std::string::npos) || //check for gif works
+				(full_message.find ("This work was deleted.") != std::string::npos)) //deleted work
 			{
-				if (fmess.find ("ugokuIllustData") != std::string::npos)
-					Rain::RainCout << "MANUAL CONFIMATION (VIDEO): " <<  mrsiparam->code << std::endl;
+				if (full_message.find ("ugokuIllustData") != std::string::npos)
+					Rain::RainCout << "MANUAL CONFIMATION (VIDEO): " << code << std::endl;
 
-				ImageManager::in_img_queue.erase (mrsiparam->code);
-				ImageManager::img_processed.insert (mrsiparam->code);
-				ImageManager::img_requesting.erase (mrsiparam->code);
+				ImageManager::in_img_queue.erase (code);
+				ImageManager::img_processed.insert (code);
+				ImageManager::img_requesting.erase (code);
 
 				PostMessage (ImageWnd::image_wnd.hwnd, RAIN_IMAGECHANGE, 0, 0);
-				FreeAndCloseMRSI (mrsiparam);
-				return;
 			}
-
-			//parse fmess for original image(s)
-			std::size_t orig = fmess.find ("_illust_modal _hidden ui-modal-close-box");
-
-			if (orig == std::string::npos)
+			else
 			{
-				if (fmess.find ("mode=manga") != std::string::npos) //is a manga/multiple image submission
-					MarkParseMangaSubmission (mrsiparam->code);
-				else //we have a problem
+				//parse fmess for original image(s)
+				std::size_t orig = full_message.find ("_illust_modal _hidden ui-modal-close-box");
+
+				if (orig == std::string::npos)
 				{
-					Rain::RainCout << "MANUAL CONFIMATION (???): " << mrsiparam->code << std::endl;
-					ImageManager::in_img_queue.erase (mrsiparam->code);
-					ImageManager::img_processed.insert (mrsiparam->code);
-					ImageManager::img_requesting.erase (mrsiparam->code);
+					if (full_message.find ("mode=manga") != std::string::npos) //is a manga/multiple image submission
+						MarkParseMangaSubmission (code);
+					else //we have a problem
+					{
+						Rain::RainCout << "MANUAL CONFIMATION (???): " << code << std::endl;
+						ImageManager::in_img_queue.erase (code);
+						ImageManager::img_processed.insert (code);
+						ImageManager::img_requesting.erase (code);
 
-					PostMessage (ImageWnd::image_wnd.hwnd, RAIN_IMAGECHANGE, 0, 0);
-					FreeAndCloseMRSI (mrsiparam);
-					return;
+						PostMessage (ImageWnd::image_wnd.hwnd, RAIN_IMAGECHANGE, 0, 0);
+					}
 				}
-			}
-			else //single image submission
-			{
-				//create vector in bsfq for image name storage
-				ImageManager::img_queue.push (std::make_pair (mrsiparam->code, new std::vector<std::string> ()));
+				else //single image submission
+				{
+					//create vector in bsfq for image name storage
+					ImageManager::img_queue.push (std::make_pair (code, new std::vector<std::string> ()));
 
-				orig = fmess.find ("data-src=\"", orig) + 10;
-				MarkDownloadSingleImage (fmess.substr (orig, fmess.find ("\"", orig) - orig), "http://www.pixiv.net/member_illust.php?mode=medium&illust_id=" + Rain::TToStr (mrsiparam->code), ImageManager::img_queue.back ().second);
+					orig = full_message.find ("data-src=\"", orig) + 10;
+					MarkDownloadSingleImage (full_message.substr (orig, full_message.find ("\"", orig) - orig), "http://www.pixiv.net/member_illust.php?mode=medium&illust_id=" + Rain::TToStr (code), ImageManager::img_queue.back ().second);
+				}
 			}
 		}
 
-		FreeAndCloseMRSI (mrsiparam);
+		closesocket (*recvparam.sock);
+		delete recvparam.sock;
+		delete recvparam.message;
+		Rain::FreePtrVectorPtr (&funcparam);
 	}
 
 	int MarkParseMangaSubmission (int code)

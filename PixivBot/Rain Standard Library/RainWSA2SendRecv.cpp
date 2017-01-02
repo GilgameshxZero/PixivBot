@@ -52,9 +52,9 @@ namespace Rain
 		return ret;
 	}
 
-	int SendText (SOCKET &sock, const char *cstrtext, long long len)
+	int SendText (SOCKET &sock, const char *cstrtext, std::size_t len)
 	{
-		long long sent = 0;
+		std::size_t sent = 0;
 		int ret;
 
 		while (sent < len)
@@ -70,6 +70,11 @@ namespace Rain
 		}
 
 		return 0;
+	}
+
+	int SendText (SOCKET &sock, std::string strtext)
+	{
+		return SendText (sock, strtext.c_str (), strtext.length ());
 	}
 
 	int SendHeader (SOCKET &sock, std::unordered_map<std::string, std::string> *headers)

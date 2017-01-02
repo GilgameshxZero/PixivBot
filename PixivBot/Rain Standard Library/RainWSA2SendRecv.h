@@ -18,21 +18,22 @@ namespace Rain
 
 	class WSARecvParam
 	{
-	public:
-		WSARecvParam ();
-		WSARecvParam (SOCKET *sock, std::string *message, int buflen, void *funcparam, WSARecvPMFunc OnProcessMessage, WSARecvInitFunc OnRecvInit, WSARecvExitFunc OnRecvEnd);
+		public:
+			WSARecvParam ();
+			WSARecvParam (SOCKET *sock, std::string *message, int buflen, void *funcparam, WSARecvPMFunc OnProcessMessage, WSARecvInitFunc OnRecvInit, WSARecvExitFunc OnRecvEnd);
 
-		SOCKET *sock;
-		std::string *message;
-		int buflen;
-		void *funcparam;
-		WSARecvPMFunc OnProcessMessage; //return nonzero to terminate recv
-		WSARecvInitFunc OnRecvInit;
-		WSARecvExitFunc OnRecvEnd;
+			SOCKET *sock;
+			std::string *message;
+			int buflen;
+			void *funcparam;
+			WSARecvPMFunc OnProcessMessage; //return nonzero to terminate recv
+			WSARecvInitFunc OnRecvInit;
+			WSARecvExitFunc OnRecvEnd;
 	};
 
 	//send raw text over a socket
-	int SendText (SOCKET &sock, const char *cstrtext, long long len);
+	int SendText (SOCKET &sock, const char *cstrtext, std::size_t len);
+	int SendText (SOCKET &sock, std::string strtext);
 
 	int SendHeader (SOCKET &sock, std::unordered_map<std::string, std::string> *headers);
 
