@@ -1,0 +1,29 @@
+pending:
+	ESC exiting does not terminate threads but allows program to end
+
+1.0.1
+	updated error handling for invalid pixiv image requests
+	updated safe mode to be more consistent
+1.0.2
+	added capability to limit concurrent thread count
+	fixed cachethread related bugs
+1.0.3
+	fixed bug where requests would return an empty message and crash the program; now retries request
+	made cache loading a thread, so can process images while loading cache
+	cache is now persistent between program executions, so loading will check if previous execution loaded image already
+	OnAccept/OnReject is now faster in slow internet conditions
+	fixed warnings
+1.1.0
+	accepting the last image in the queue will not end the program prematurely anymore before loading recs
+	code refactoring: removed redundant settings, and moved settings to global variables in custom namespace
+	added program icon: Kanan, from Love Live, from pixiv illustration 58835247
+	removed config host/port options, since those are constant
+	usually loads first image of a manga submission first instead of the last image first
+	video entries are outputted to the console to be manually dealt with and no longer crash the program
+	added memory leak monitor on debug mode
+1.1.1
+	code refactoring: added standard rain library to remove race conditions on cout, moved memory leak code to utility
+	rain library standardization
+	now closes window on ESC again
+	removed memory leaks
+	updated detection of image request errors

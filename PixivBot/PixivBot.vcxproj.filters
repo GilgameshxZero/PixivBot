@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Other">
+      <UniqueIdentifier>{49881c99-18c6-448d-9178-7cf1368e633d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rain Standard Libraries">
+      <UniqueIdentifier>{21c66f71-bc8b-472a-a733-059c69ff56ef}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="VersionBuildInc.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VersionID.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Start.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UnivParam.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MRSIParam.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MarkRequestStoreImage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImgWndProc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SendHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SendHandlerDef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImgWndProcDef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Settings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainError.h">
+      <Filter>Rain Standard Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainWindow.h">
+      <Filter>Rain Standard Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainUtility.h">
+      <Filter>Rain Standard Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainWSA2.h">
+      <Filter>Rain Standard Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainGdiplusInclude.h">
+      <Filter>Rain Standard Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainWindowsLAM.h">
+      <Filter>Rain Standard Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainLibraries.h">
+      <Filter>Rain Standard Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainWSA2Utility.h">
+      <Filter>Rain Standard Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainWSA2SendRecv.h">
+      <Filter>Rain Standard Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainWSA2Include.h">
+      <Filter>Rain Standard Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainLogging.h">
+      <Filter>Rain Standard Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Templates\Rain Standard Library\RainUtilityFile.h">
+      <Filter>Rain Standard Libraries</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resource.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Start.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UnivParam.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MarkRequestStoreImage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImgWndProc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SendHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SendHandlerDef.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImgWndProcDef.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Settings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainError.cpp">
+      <Filter>Rain Standard Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainWindow.cpp">
+      <Filter>Rain Standard Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainUtility.cpp">
+      <Filter>Rain Standard Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainWSA2.cpp">
+      <Filter>Rain Standard Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainGdiplusInclude.cpp">
+      <Filter>Rain Standard Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainWindowsLAM.cpp">
+      <Filter>Rain Standard Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainLibraries.cpp">
+      <Filter>Rain Standard Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainWSA2Utility.cpp">
+      <Filter>Rain Standard Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainWSA2SendRecv.cpp">
+      <Filter>Rain Standard Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainWSA2Include.cpp">
+      <Filter>Rain Standard Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainUtilityFile.cpp">
+      <Filter>Rain Standard Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Templates\Rain Standard Library\RainLogging.cpp">
+      <Filter>Rain Standard Libraries</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="changelog.txt">
+      <Filter>Other</Filter>
+    </Text>
+    <Text Include="config.format.txt">
+      <Filter>Other</Filter>
+    </Text>
+    <Text Include="config.txt">
+      <Filter>Other</Filter>
+    </Text>
+    <Text Include="memory_leaks.txt">
+      <Filter>Other</Filter>
+    </Text>
+    <Text Include="pixivbot_error.txt">
+      <Filter>Other</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="prog_icon.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
