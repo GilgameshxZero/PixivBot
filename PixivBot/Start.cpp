@@ -150,6 +150,8 @@ namespace PixivBot
 				}
 			}
 
+			RequestManager::JoinRemoveThreads ();
+
 			imgwndresult = msg.wParam;
 			ShowWindow (ImageWnd::image_wnd.hwnd, SW_HIDE);
 
@@ -176,9 +178,9 @@ namespace PixivBot
 			config.close ();
 
 			if (imgwndresult == 0) //exited because all images were img_processed
-				Rain::RainCout << "all images were img_processed\npress enter to quit";
+				Rain::RainCout << "all images were processed\npress enter to quit";
 			else if (imgwndresult == 1) //aborted program
-				Rain::RainCout << "program aborted before all images were img_processed\nprogress is saved for next program run\npress enter to quit";
+				Rain::RainCout << "program aborted before all images were processed\nprogress is saved for next program run\npress enter to quit";
 			std::cin.get ();
 
 			ImageWnd::image_wnd.~RainWindow ();

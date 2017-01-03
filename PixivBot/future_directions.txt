@@ -1,1 +1,11 @@
-ESC exiting does not terminate threads but allows program to end
+limiting request threads but processing images fast may lead to instabilities in slow internet conditions, needs fix
+	this doesn't happen much at all when threads aren't limited
+
+change all threads into std::thread
+revise RainCout to become RainCoutF
+something is a little off with thread counts
+make thread limits not 1 and 0 work
+make the p_saddrinfo_www variable into a map
+rebase RequestManager
+add timout as a setting in config
+find a better way to clean out std::threads in RequestManager

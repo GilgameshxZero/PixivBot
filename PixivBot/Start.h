@@ -3,7 +3,6 @@
 #define OEMRESOURCE
 
 #include "ImageWnd.h"
-#include "MarkRequestStoreImage.h"
 #include "Settings.h"
 #include "resource.h"
 

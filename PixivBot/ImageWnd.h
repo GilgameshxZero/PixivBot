@@ -1,8 +1,6 @@
 #pragma once
 
 #include "ImageManager.h"
-#include "MarkRequestStoreImage.h"
-#include "MRSIParam.h"
 #include "RequestManager.h"
 #include "Settings.h"
 

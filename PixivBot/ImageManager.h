@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ImageWnd.h"
-#include "MarkRequestStoreImage.h"
 
 #include "RainWindowsLAM.h"
 

@@ -29,7 +29,7 @@ namespace PixivBot
 				//cache images
 				if (ImageManager::img_processed.find (img_queue_init[a]) == ImageManager::img_processed.end () && ImageManager::in_img_queue.find (img_queue_init[a]) == ImageManager::in_img_queue.end ())
 				{
-					MarkRequestStoreImage (img_queue_init[a]);
+					RequestManager::ThreadCacheSubmission (img_queue_init[a]);
 					ImageManager::in_img_queue.insert (img_queue_init[a]);
 				}
 				else

@@ -4,7 +4,7 @@ namespace Rain
 {
 	void FreePtrVectorPtr (std::vector<void *> *p_vector_p)
 	{
-		for (int a = 0;a < p_vector_p->size ();a++)
+		for (std::size_t a = 0;a < p_vector_p->size ();a++)
 			delete p_vector_p->at (a);
 		delete p_vector_p;
 	}

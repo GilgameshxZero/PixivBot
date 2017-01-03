@@ -7,6 +7,7 @@ Standard
 #include "RainWindow.h"
 #include "RainWSA2Include.h"
 
+#include <chrono>
 #include <string>
 #include <unordered_map>
 
@@ -57,4 +58,7 @@ namespace Rain
 	//create a message queue/window which will respond to messages sent to it
 	//RainWindow * which is returned must be freed
 	RainWindow *CreateSendHandler (std::unordered_map<UINT, RainWindow::MSGFC> *msgm);
+
+	//congregate messages from a socket until it closes or timeout
+	int RecvUntilTimeout (SOCKET &socket, std::string &message, int timeout_ms = 10000, int buffer_len = 131072);
 }

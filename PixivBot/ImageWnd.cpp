@@ -78,7 +78,7 @@ namespace PixivBot
 				PostMessage (hwnd, RAIN_CLOSEIMGWND, 0, 0);
 				return 0;
 			}
-			else if (ImageManager::img_queue.size () == 0 && RequestManager::req_thread_count != 0) //still caching
+			else if (ImageManager::img_queue.size () == 0 && RequestManager::req_count != 0) //still caching
 				return 0;
 			else if (ImageManager::img_queue.size () == 0 || ImageManager::img_queue.front ().second->size () == 0) //images are still loading
 				return 0;
@@ -122,15 +122,14 @@ namespace PixivBot
 			//move image to accepted folder
 			MoveFile (((std::string)(Settings::cache_dir + ImageManager::img_queue.front ().second->front ())).c_str (), ((std::string)(Settings::accept_dir + ImageManager::img_queue.front ().second->front ())).c_str ());
 
-			MRSIParam *mrsiparam = new MRSIParam ();
-			mrsiparam->code = ImageManager::img_queue.front ().first;
+			int code = ImageManager::img_queue.front ().first;
 
 			//remove entry from queue
 			ImageManager::QueueRemCurImg ();
 
 			//don't send RAIN_IMAGECHANGE yet, before loading recs; recs function will do it
 			//load recommended images into cache and queue, but do it asynchronously to make the process fast
-			Rain::SimpleCreateThread (MRSRThread, reinterpret_cast<LPVOID>(mrsiparam));
+			RequestManager::ThreadCacheRecommendations (code);
 		}
 	}
 }
