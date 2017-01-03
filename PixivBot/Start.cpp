@@ -12,43 +12,24 @@ namespace PixivBot
 				HOST_PORT = "80";
 
 			WSADATA wsa_data;
+			std::vector<int> img_queue_init; //initial image queue to cache, from config file
 
-			UnivParam uparam;
-			Rain::RainWindow imagewnd;
 			std::unordered_map<UINT, Rain::RainWindow::MSGFC> imagewndhandler;
 			Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 			ULONG_PTR gdiplusToken;
-			std::unordered_set<int> processed, inqueue, awaiting;
-			std::vector<std::string> tmpprocessed;
-			int cachethread = 0;
+			std::vector<std::string> tmpimg_processed;
 			WPARAM imgwndresult;
 
 			MSG msg;
 			BOOL bRet;
 
-			bool imgwndready = false;
-
-			std::vector<int> tmpbsfq;
 			HANDLE mem_leak;
-			std::unordered_map<UINT, Rain::RainWindow::MSGFC> sendhandler;
 			std::fstream config;
-			std::queue< std::pair<int, std::vector<std::string> *> > bfsq; //(image code, image filepaths pointer); all images in the queue are loaded; recommendations are added to the queue and loaded if the image is accepted by the user
 			std::string tmpline;
 
 			int error;
 
 			mem_leak = Rain::LogMemoryLeaks ("memory_leaks.txt");
-
-			Gdiplus::GdiplusStartup (&gdiplusToken, &gdiplusStartupInput, NULL);
-
-			uparam.imagewnd = &imagewnd;
-			uparam.bfsq = &bfsq;
-			uparam.processed = &processed;
-			uparam.inqueue = &inqueue;
-			uparam.cachethread = &cachethread;
-			uparam.imgwndready = &imgwndready;
-			uparam.tmpbsfq = &tmpbsfq;
-			uparam.awaiting = &awaiting;
 
 			Rain::RedirectCerrFile ("pixivbot_error.txt");
 			config.open ("config.txt", std::ios_base::in | std::ios_base::binary);
@@ -64,18 +45,17 @@ namespace PixivBot
 					if (tmpline[b] >= '0' && tmpline[b] <= '9')
 						tmp = tmp * 10 + tmpline[b] - '0';
 				}
-				tmpbsfq.push_back (tmp);
-				awaiting.insert (tmp);
+				img_queue_init.push_back (tmp);
+				ImageManager::img_requesting.insert (tmp);
 				std::getline (config, tmpline);
 				Rain::TrimBSR (tmpline);
 			}
 
-			if (tmpbsfq.size () == 0)
+			if (img_queue_init.size () == 0)
 			{
 				Rain::RainCout << "no origin images specified\npress enter to quit";
 				std::cin.get ();
 				config.close ();
-				Gdiplus::GdiplusShutdown (gdiplusToken);
 				return Rain::ReportError (-1, "No origin images specified.");
 			}
 
@@ -125,42 +105,43 @@ namespace PixivBot
 				}
 			}
 
-			//processed images
+			//img_processed images
 			std::getline (config, tmpline);
 			Rain::TrimBSR (tmpline);
 			while (tmpline != "")
 			{
-				processed.insert (Rain::StrToT<int> (tmpline));
+				ImageManager::img_processed.insert (Rain::StrToT<int> (tmpline));
 				std::getline (config, tmpline);
 				Rain::TrimBSR (tmpline);
 			}
 
 			config.close ();
 
-			//scan accepted directory for processed images
-			Rain::GetFiles (Settings::accept_dir, tmpprocessed, "*_p*.*");
-			for (unsigned int a = 0;a < tmpprocessed.size ();a++)
-				processed.insert (Rain::StrToT<int> (tmpprocessed[a].substr (0, tmpprocessed[a].find ("_"))));
+			//scan accepted directory for img_processed images
+			Rain::GetFiles (Settings::accept_dir, tmpimg_processed, "*_p*.*");
+			for (unsigned int a = 0;a < tmpimg_processed.size ();a++)
+				ImageManager::img_processed.insert (Rain::StrToT<int> (tmpimg_processed[a].substr (0, tmpimg_processed[a].find ("_"))));
 
-			//create window before cache is complete, so that we can process images while they are cached in
-			imagewndhandler.insert (std::make_pair (WM_CLOSE, ImgWndProc::OnClose));
-			imagewndhandler.insert (std::make_pair (WM_KEYDOWN, ImgWndProc::OnKeyDown));
-			imagewndhandler.insert (std::make_pair (WM_KEYUP, ImgWndProc::OnKeyUp));
-			imagewndhandler.insert (std::make_pair (WM_PAINT, ImgWndProc::OnPaint));
-			imagewndhandler.insert (std::make_pair (WM_SIZE, ImgWndProc::OnSize));
-			imagewndhandler.insert (std::make_pair (RAIN_IMAGECHANGE, ImgWndProc::OnImageChange));
-			imagewnd.Create (&imagewndhandler, NULL, NULL, 0, 0, GetModuleHandle (NULL), NULL/**/, reinterpret_cast<HCURSOR>(LoadImage (NULL, MAKEINTRESOURCE (OCR_NORMAL), IMAGE_CURSOR, 0, 0, LR_SHARED | LR_DEFAULTSIZE)), reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1), "", NULL/**/, NULL, "PixivBot Image Window", WS_OVERLAPPEDWINDOW, 0, 0, 1000, 1000, NULL, NULL);
-			SetWindowLongPtr (imagewnd.hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(&uparam));
-			UpdateWindow (imagewnd.hwnd);
-			ShowWindow (imagewnd.hwnd, SW_SHOWMAXIMIZED);
+			//create window so that we can process images while they are cached in
+			Gdiplus::GdiplusStartup (&gdiplusToken, &gdiplusStartupInput, NULL);
 
-			Rain::SimpleCreateThread (CacheImages, reinterpret_cast<LPVOID>(&uparam));
+			imagewndhandler.insert (std::make_pair (WM_CLOSE, ImageWnd::OnClose));
+			imagewndhandler.insert (std::make_pair (WM_KEYDOWN, ImageWnd::OnKeyDown));
+			imagewndhandler.insert (std::make_pair (WM_KEYUP, ImageWnd::OnKeyUp));
+			imagewndhandler.insert (std::make_pair (WM_PAINT, ImageWnd::OnPaint));
+			imagewndhandler.insert (std::make_pair (WM_SIZE, ImageWnd::OnSize));
+			imagewndhandler.insert (std::make_pair (RAIN_IMAGECHANGE, ImageWnd::OnImageChange));
+			ImageWnd::image_wnd.Create (&imagewndhandler, NULL, NULL, 0, 0, GetModuleHandle (NULL), NULL/**/, reinterpret_cast<HCURSOR>(LoadImage (NULL, MAKEINTRESOURCE (OCR_NORMAL), IMAGE_CURSOR, 0, 0, LR_SHARED | LR_DEFAULTSIZE)), reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1), "", NULL/**/, NULL, "PixivBot Image Window", WS_OVERLAPPEDWINDOW, 0, 0, 1000, 1000, NULL, NULL);
+			UpdateWindow (ImageWnd::image_wnd.hwnd);
+			ShowWindow (ImageWnd::image_wnd.hwnd, SW_SHOWMAXIMIZED);
+
+			Rain::SimpleCreateThread (ImageManager::CacheInitImages, &img_queue_init);
 
 			while ((bRet = GetMessage (&msg, NULL, 0, 0)) != 0)
 			{
 				if (bRet == -1)
 					return -1; //serious error
-				else if (msg.hwnd == imagewnd.hwnd && msg.message == RAIN_CLOSEIMGWND) //image window signals close
+				else if (msg.hwnd == ImageWnd::image_wnd.hwnd && msg.message == RAIN_CLOSEIMGWND) //image window signals close
 					break;
 				else
 				{
@@ -169,12 +150,14 @@ namespace PixivBot
 				}
 			}
 
+			RequestManager::JoinRemoveThreads ();
+
 			imgwndresult = msg.wParam;
-			ShowWindow (imagewnd.hwnd, SW_HIDE);
+			ShowWindow (ImageWnd::image_wnd.hwnd, SW_HIDE);
 
 			//write to config file the leftover queue at this point
 			config.open ("config.txt", std::ios_base::out | std::ios_base::binary);
-			for (auto it = awaiting.begin ();it != awaiting.end ();it++)
+			for (std::unordered_set<int>::iterator it = ImageManager::img_requesting.begin ();it != ImageManager::img_requesting.end ();it++)
 				config << "http://www.pixiv.net/member_illust.php?mode=medium&illust_id=" << *it << "\n";
 			config << "\n"
 				<< (Settings::safe_mode ? "safe" : "r18") << "\n"
@@ -189,18 +172,18 @@ namespace PixivBot
 				for (int b = 0;b < 3;b++)
 					config << Settings::http_req_header[a][b] << "\n";
 			//headers contain newlines at their end
-			for (std::unordered_set<int>::iterator it = processed.begin ();it != processed.end ();it++)
+			for (std::unordered_set<int>::iterator it = ImageManager::img_processed.begin ();it != ImageManager::img_processed.end ();it++)
 				config << *it << "\n";
 			config << "\n";
 			config.close ();
 
-			if (imgwndresult == 0) //exited because all images were processed
+			if (imgwndresult == 0) //exited because all images were img_processed
 				Rain::RainCout << "all images were processed\npress enter to quit";
 			else if (imgwndresult == 1) //aborted program
 				Rain::RainCout << "program aborted before all images were processed\nprogress is saved for next program run\npress enter to quit";
 			std::cin.get ();
 
-			imagewnd.~RainWindow ();
+			ImageWnd::image_wnd.~RainWindow ();
 
 			freeaddrinfo (p_saddrinfo_www);
 			Gdiplus::GdiplusShutdown (gdiplusToken);
@@ -210,25 +193,5 @@ namespace PixivBot
 
 			return 0;
 		}
-	}
-
-	DWORD WINAPI CacheImages (LPVOID param)
-	{
-		UnivParam &uparam = *reinterpret_cast<UnivParam *>(param);
-		for (unsigned int a = 0; a < uparam.tmpbsfq->size (); a++)
-		{
-			//cache images
-			if (uparam.processed->find ((*uparam.tmpbsfq)[a]) == uparam.processed->end () && uparam.inqueue->find ((*uparam.tmpbsfq)[a]) == uparam.inqueue->end ())
-			{
-				MarkRequestStoreImage ((*uparam.tmpbsfq)[a], &uparam);
-				uparam.inqueue->insert ((*uparam.tmpbsfq)[a]);
-			}
-			else
-				uparam.awaiting->erase ((*uparam.tmpbsfq)[a]);
-
-			SendMessage (uparam.imagewnd->hwnd, RAIN_IMAGECHANGE, 0, 0);
-		}
-
-		return 0;
 	}
 }

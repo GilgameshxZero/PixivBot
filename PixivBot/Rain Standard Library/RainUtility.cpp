@@ -2,6 +2,13 @@
 
 namespace Rain
 {
+	void FreePtrVectorPtr (std::vector<void *> *p_vector_p)
+	{
+		for (std::size_t a = 0;a < p_vector_p->size ();a++)
+			delete p_vector_p->at (a);
+		delete p_vector_p;
+	}
+
 	char IntToBase64 (int x)
 	{
 		if (x < 26)

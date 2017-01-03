@@ -52,9 +52,9 @@ namespace Rain
 		return ret;
 	}
 
-	int SendText (SOCKET &sock, const char *cstrtext, long long len)
+	int SendText (SOCKET &sock, const char *cstrtext, std::size_t len)
 	{
-		long long sent = 0;
+		std::size_t sent = 0;
 		int ret;
 
 		while (sent < len)
@@ -70,6 +70,11 @@ namespace Rain
 		}
 
 		return 0;
+	}
+
+	int SendText (SOCKET &sock, std::string strtext)
+	{
+		return SendText (sock, strtext.c_str (), strtext.length ());
 	}
 
 	int SendHeader (SOCKET &sock, std::unordered_map<std::string, std::string> *headers)
@@ -108,5 +113,44 @@ namespace Rain
 		rw->Create (msgm, NULL, NULL, 0, 0, GetModuleHandle (NULL), NULL, NULL, NULL, "", NULL, NULL, "", WS_POPUP, 0, 0, 0, 0, NULL, NULL, RainWindow::NULLCLASSNAME);
 
 		return rw;
+	}
+
+	int RecvUntilTimeout (SOCKET &socket, std::string &message, int timeout_ms, int buffer_len)
+	{
+		struct timeval timeout_s;
+		fd_set readfds;
+		char *buffer = new char[buffer_len];
+		int ret;
+
+		readfds.fd_count = 1;
+		readfds.fd_array[0] = socket;
+		timeout_s.tv_sec = 0;
+
+		std::chrono::time_point<std::chrono::steady_clock> init_time = std::chrono::high_resolution_clock::now ();
+
+		do {
+			timeout_s.tv_usec = static_cast<long>(timeout_ms - std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now () - init_time).count ()) * 1000;
+			if (select (NULL, &readfds, NULL, NULL, &timeout_s) == 1)
+			{
+				ret = recv (socket, buffer, buffer_len, 0);
+				if (ret > 0) //received ret bytes
+					message += std::string (buffer, ret);
+				else if (ret == 0) //socket closed
+					break;
+				else //error
+				{
+					delete[] buffer;
+					return 2;
+				}
+			}
+			else //timeout
+			{
+				delete[] buffer;
+				return 1;
+			}
+		} while (true);
+
+		delete[] buffer;
+		return 0;
 	}
 }

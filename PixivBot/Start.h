@@ -2,11 +2,8 @@
 
 #define OEMRESOURCE
 
-#include "ImgWndProc.h"
-#include "MarkRequestStoreImage.h"
-#include "SendHandler.h"
+#include "ImageWnd.h"
 #include "Settings.h"
-#include "UnivParam.h"
 #include "resource.h"
 
 #include "RainLibraries.h"
@@ -24,6 +21,4 @@ namespace PixivBot
 
 		int Start ();
 	}
-
-	DWORD WINAPI CacheImages (LPVOID param);
 }

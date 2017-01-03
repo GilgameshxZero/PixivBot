@@ -7,6 +7,7 @@ Standard
 #include "RainWindow.h"
 #include "RainWSA2Include.h"
 
+#include <chrono>
 #include <string>
 #include <unordered_map>
 
@@ -18,21 +19,22 @@ namespace Rain
 
 	class WSARecvParam
 	{
-	public:
-		WSARecvParam ();
-		WSARecvParam (SOCKET *sock, std::string *message, int buflen, void *funcparam, WSARecvPMFunc OnProcessMessage, WSARecvInitFunc OnRecvInit, WSARecvExitFunc OnRecvEnd);
+		public:
+			WSARecvParam ();
+			WSARecvParam (SOCKET *sock, std::string *message, int buflen, void *funcparam, WSARecvPMFunc OnProcessMessage, WSARecvInitFunc OnRecvInit, WSARecvExitFunc OnRecvEnd);
 
-		SOCKET *sock;
-		std::string *message;
-		int buflen;
-		void *funcparam;
-		WSARecvPMFunc OnProcessMessage; //return nonzero to terminate recv
-		WSARecvInitFunc OnRecvInit;
-		WSARecvExitFunc OnRecvEnd;
+			SOCKET *sock;
+			std::string *message;
+			int buflen;
+			void *funcparam;
+			WSARecvPMFunc OnProcessMessage; //return nonzero to terminate recv
+			WSARecvInitFunc OnRecvInit;
+			WSARecvExitFunc OnRecvEnd;
 	};
 
 	//send raw text over a socket
-	int SendText (SOCKET &sock, const char *cstrtext, long long len);
+	int SendText (SOCKET &sock, const char *cstrtext, std::size_t len);
+	int SendText (SOCKET &sock, std::string strtext);
 
 	int SendHeader (SOCKET &sock, std::unordered_map<std::string, std::string> *headers);
 
@@ -56,4 +58,7 @@ namespace Rain
 	//create a message queue/window which will respond to messages sent to it
 	//RainWindow * which is returned must be freed
 	RainWindow *CreateSendHandler (std::unordered_map<UINT, RainWindow::MSGFC> *msgm);
+
+	//congregate messages from a socket until it closes or timeout
+	int RecvUntilTimeout (SOCKET &socket, std::string &message, int timeout_ms = 10000, int buffer_len = 131072);
 }

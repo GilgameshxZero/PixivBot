@@ -36,21 +36,6 @@
     <ClInclude Include="Start.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UnivParam.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MRSIParam.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MarkRequestStoreImage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ImgWndProc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SendHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Settings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -90,6 +75,15 @@
     <ClInclude Include="Rain Standard Library\RainWSA2Utility.h">
       <Filter>Rain Standard Library</Filter>
     </ClInclude>
+    <ClInclude Include="ImageWnd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RequestManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc">
@@ -101,18 +95,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Start.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="UnivParam.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MarkRequestStoreImage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ImgWndProc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SendHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Settings.cpp">
@@ -153,6 +135,15 @@
     </ClCompile>
     <ClCompile Include="Rain Standard Library\RainWSA2Utility.cpp">
       <Filter>Rain Standard Library</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageWnd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RequestManager.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

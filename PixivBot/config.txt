@@ -1,16 +1,5 @@
-http://www.pixiv.net/member_illust.php?mode=medium&illust_id=53107233
-http://www.pixiv.net/member_illust.php?mode=medium&illust_id=50434270
-http://www.pixiv.net/member_illust.php?mode=manga&illust_id=57958879
-http://www.pixiv.net/member_illust.php?mode=manga&illust_id=58393060
-http://www.pixiv.net/member_illust.php?mode=medium&illust_id=56478475
-http://www.pixiv.net/member_illust.php?mode=manga&illust_id=51909093
-http://www.pixiv.net/member_illust.php?mode=medium&illust_id=58148421
-http://www.pixiv.net/member_illust.php?mode=medium&illust_id=58371429
-http://www.pixiv.net/member_illust.php?mode=medium&illust_id=58754390
-http://www.pixiv.net/member_illust.php?mode=medium&illust_id=58256965
-http://www.pixiv.net/member_illust.php?mode=manga&illust_id=58371429
-http://www.pixiv.net/member_illust.php?mode=medium&illust_id=56305899
-http://www.pixiv.net/member_illust.php?mode=medium&illust_id=57080241
+http://www.pixiv.net/member_illust.php?mode=medium&illust_id=59986963
+http://www.pixiv.net/member_illust.php?mode=medium&illust_id=58761340
 
 r18
 13
@@ -70,23 +59,9 @@ Cache-Control: no-cache
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36
 Accept: image/webp,image/*,*/*;q=0.8
 
-42575952
-47783717
-49065519
-48471328
-49442675
-45289668
-45083692
-53170130
-50825793
-50516811
-48513848
-56271677
-48457104
-56733299
-50507797
+58593121
 47335740
-44338832
 47335994
 47336258
+58761407
 
