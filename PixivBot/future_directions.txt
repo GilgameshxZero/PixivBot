@@ -9,3 +9,4 @@ make the p_saddrinfo_www variable into a map
 rebase RequestManager
 add timout as a setting in config
 find a better way to clean out std::threads in RequestManager
+some crashes in manga mode, such as with http://www.pixiv.net/member_illust.php?mode=medium&illust_id=48561810
