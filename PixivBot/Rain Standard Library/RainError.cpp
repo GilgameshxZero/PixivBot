@@ -10,10 +10,17 @@ namespace Rain
 		return code;
 	}
 
-	std::streambuf *RedirectCerrFile (std::string filename)
+	std::pair<std::streambuf *, std::ofstream *> RedirectCerrFile (std::string filename)
 	{
-		static std::ofstream cerrfile;
-		cerrfile.open (filename, std::ios_base::out | std::ios_base::binary);
-		return std::cerr.rdbuf (cerrfile.rdbuf ());
+		std::ofstream *cerrfile = new std::ofstream;
+		cerrfile->open (filename);
+		return std::make_pair (std::cerr.rdbuf (cerrfile->rdbuf ()), cerrfile);
+	}
+
+	void CloseCerrFile (std::pair<std::streambuf *, std::ofstream *> cerr_filedata)
+	{
+		std::cerr.rdbuf (cerr_filedata.first);
+		cerr_filedata.second->close ();
+		delete cerr_filedata.second;
 	}
 }

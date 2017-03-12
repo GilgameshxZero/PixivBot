@@ -40,3 +40,7 @@
 		removed MRSIParam and MarkRequestStoreImage files, and moved them with timeout threads to RequestManager
 	smoother thread creation/deletion with std::thread
 	all threads now end peacefully at program exit
+1.2.0
+	last update should have been a minor update instead of a "revision"
+	this update removes a possible race condition in CacheInitImages, as well as adding some debugging output
+	also, config.txt is added back into the github repo (personal private information should be difficult to decode from the cookie data)

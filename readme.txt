@@ -1,5 +1,4 @@
-M4
-Monochrome8
+[M4 - Monochrome8]
 PixivBot
 Version in VersionID.h
 Build in VersionBuildInc.h

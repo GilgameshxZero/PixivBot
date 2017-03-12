@@ -32,6 +32,7 @@ namespace PixivBot
 			mem_leak = Rain::LogMemoryLeaks ("memory_leaks.txt");
 
 			Rain::RedirectCerrFile ("pixivbot_error.txt");
+			Rain::RainCout << "Reading configuration file..." << std::endl;
 			config.open ("config.txt", std::ios_base::in | std::ios_base::binary);
 
 			//get bsf start points
@@ -87,10 +88,12 @@ namespace PixivBot
 			}
 			std::getline (config, tmpline);
 
+			Rain::RainCout << "Initializing winsock and fetching information about pixiv.net..." << std::endl;
 			error = Rain::InitWinsock (wsa_data);
 			if (error) return Rain::ReportError (error);
 			error = Rain::GetClientAddr (HOST, HOST_PORT, &p_saddrinfo_www);
 			if (error) return Rain::ReportError (error);
+			Rain::RainCout << "Done." << std::endl;
 
 			//headers for our requests
 			for (int a = 0; a < 6; a++)
@@ -116,11 +119,14 @@ namespace PixivBot
 			}
 
 			config.close ();
+			Rain::RainCout << "Finished reading configuration file. Scanning accepted directory..." << std::endl;
 
 			//scan accepted directory for img_processed images
 			Rain::GetFiles (Settings::accept_dir, tmpimg_processed, "*_p*.*");
 			for (unsigned int a = 0;a < tmpimg_processed.size ();a++)
 				ImageManager::img_processed.insert (Rain::StrToT<int> (tmpimg_processed[a].substr (0, tmpimg_processed[a].find ("_"))));
+
+			Rain::RainCout << "Done. Creating image window..." << std::endl;
 
 			//create window so that we can process images while they are cached in
 			Gdiplus::GdiplusStartup (&gdiplusToken, &gdiplusStartupInput, NULL);

@@ -50,6 +50,7 @@ namespace PixivBot
 			{
 				req_threads.front ().join ();
 				req_threads.pop ();
+				Rain::RainCout << "Joining request threads: " << req_threads.size () << " left" << std::endl;
 			}
 		}
 		void ThreadCacheSubmission (int code)

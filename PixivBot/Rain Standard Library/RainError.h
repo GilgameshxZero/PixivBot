@@ -11,5 +11,6 @@ Standard
 namespace Rain
 {
 	int ReportError (int code, std::string desc = "");
-	std::streambuf *RedirectCerrFile (std::string filename);
+	std::pair<std::streambuf *, std::ofstream *> RedirectCerrFile (std::string filename);
+	void CloseCerrFile (std::pair<std::streambuf *, std::ofstream *> cerr_filedata);
 }
