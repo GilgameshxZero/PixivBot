@@ -44,3 +44,6 @@
 	last update should have been a minor update instead of a "revision"
 	this update removes a possible race condition in CacheInitImages, as well as adding some debugging output
 	also, config.txt is added back into the github repo (personal private information should be difficult to decode from the cookie data)
+1.2.1
+	quick fix for odd manga submissions such as 48561810 which result in program stalling
+	increased crash resistability by moving config.txt file writing forward

@@ -4,9 +4,9 @@ limiting request threads but processing images fast may lead to instabilities in
 change all threads into std::thread
 revise RainCout to become RainCoutF
 something is a little off with thread counts
-make thread limits not 1 and 0 work
+make thread limits besides 1 and 0 work
 make the p_saddrinfo_www variable into a map
-rebase RequestManager
+rebase RequestManager code
 add timout as a setting in config
 find a better way to clean out std::threads in RequestManager
 some crashes in manga mode, such as with http://www.pixiv.net/member_illust.php?mode=medium&illust_id=48561810

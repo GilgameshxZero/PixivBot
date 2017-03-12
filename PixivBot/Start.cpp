@@ -156,14 +156,9 @@ namespace PixivBot
 				}
 			}
 
-			RequestManager::JoinRemoveThreads ();
-
-			imgwndresult = msg.wParam;
-			ShowWindow (ImageWnd::image_wnd.hwnd, SW_HIDE);
-
-			//write to config file the leftover queue at this point
+			//write to config file the leftover queue at this point, in case of creash in destruction of objects later
 			config.open ("config.txt", std::ios_base::out | std::ios_base::binary);
-			for (std::unordered_set<int>::iterator it = ImageManager::img_requesting.begin ();it != ImageManager::img_requesting.end ();it++)
+			for (std::unordered_set<int>::iterator it = ImageManager::img_requesting.begin (); it != ImageManager::img_requesting.end (); it++)
 				config << "http://www.pixiv.net/member_illust.php?mode=medium&illust_id=" << *it << "\n";
 			config << "\n"
 				<< (Settings::safe_mode ? "safe" : "r18") << "\n"
@@ -174,14 +169,20 @@ namespace PixivBot
 				<< Settings::pixiv_tt[0] << "\n"
 				<< Settings::pixiv_tt[1] << "\n"
 				<< "\n";
-			for (int a = 0;a < 2;a++)
-				for (int b = 0;b < 3;b++)
+			for (int a = 0; a < 2; a++)
+				for (int b = 0; b < 3; b++)
 					config << Settings::http_req_header[a][b] << "\n";
 			//headers contain newlines at their end
-			for (std::unordered_set<int>::iterator it = ImageManager::img_processed.begin ();it != ImageManager::img_processed.end ();it++)
+			for (std::unordered_set<int>::iterator it = ImageManager::img_processed.begin (); it != ImageManager::img_processed.end (); it++)
 				config << *it << "\n";
 			config << "\n";
 			config.close ();
+
+			//free up objects and memory and threads
+			RequestManager::JoinRemoveThreads ();
+
+			imgwndresult = msg.wParam;
+			ShowWindow (ImageWnd::image_wnd.hwnd, SW_HIDE);
 
 			if (imgwndresult == 0) //exited because all images were img_processed
 				Rain::RainCout << "all images were processed\npress enter to quit";

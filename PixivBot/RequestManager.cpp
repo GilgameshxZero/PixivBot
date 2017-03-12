@@ -167,11 +167,20 @@ namespace PixivBot
 					search = full_message.find ("full-size-container _ui-tooltip", search + 1);
 				}
 
-				//create bfsq vector
-				ImageManager::img_queue.push (std::make_pair (code, new std::vector<std::string> ()));
+				if (images == 0) { //we have a problem, this submission is probably something like 61589201 or 48561810; just tell the user to manually deal with this, and skip this submission
+					Rain::RainCout << "MANUAL CONFIMATION (???): " << code << std::endl;
+					ImageManager::in_img_queue.erase (code);
+					ImageManager::img_processed.insert (code);
+					ImageManager::img_requesting.erase (code);
 
-				for (int a = 0; a < images; a++)
-					RequestManager::req_threads.push (std::thread (CacheMangaBigImage, code, a, ImageManager::img_queue.back ().second));
+					PostMessage (ImageWnd::image_wnd.hwnd, RAIN_IMAGECHANGE, 0, 0);
+				} else {
+					//create bfsq vector
+					ImageManager::img_queue.push (std::make_pair (code, new std::vector<std::string> ()));
+
+					for (int a = 0; a < images; a++)
+						RequestManager::req_threads.push (std::thread (CacheMangaBigImage, code, a, ImageManager::img_queue.back ().second));
+				}
 			}
 		}
 

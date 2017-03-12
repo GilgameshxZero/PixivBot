@@ -171,6 +171,9 @@
     <Text Include="config_format.txt">
       <Filter>Other</Filter>
     </Text>
+    <Text Include="large_config.txt">
+      <Filter>Other</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Image Include="prog_icon.ico">
