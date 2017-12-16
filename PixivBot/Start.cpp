@@ -9,7 +9,7 @@ namespace PixivBot
 		int Start ()
 		{
 			const std::string HOST = "www.pixiv.net",
-				HOST_PORT = "80";
+				HOST_PORT = "443"; //must use https, pixiv required
 
 			WSADATA wsa_data;
 			std::vector<int> img_queue_init; //initial image queue to cache, from config file
@@ -117,7 +117,7 @@ namespace PixivBot
 				std::getline (config, tmpline);
 				Rain::TrimBSR (tmpline);
 			}
-
+			
 			config.close ();
 			Rain::RainCout << "Finished reading configuration file. Scanning accepted directory..." << std::endl;
 
@@ -139,9 +139,34 @@ namespace PixivBot
 			imagewndhandler.insert (std::make_pair (RAIN_IMAGECHANGE, ImageWnd::OnImageChange));
 			ImageWnd::image_wnd.Create (&imagewndhandler, NULL, NULL, 0, 0, GetModuleHandle (NULL), NULL/**/, reinterpret_cast<HCURSOR>(LoadImage (NULL, MAKEINTRESOURCE (OCR_NORMAL), IMAGE_CURSOR, 0, 0, LR_SHARED | LR_DEFAULTSIZE)), reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1), "", NULL/**/, NULL, "PixivBot Image Window", WS_OVERLAPPEDWINDOW, 0, 0, 1000, 1000, NULL, NULL);
 			UpdateWindow (ImageWnd::image_wnd.hwnd);
-			ShowWindow (ImageWnd::image_wnd.hwnd, SW_SHOWMAXIMIZED);
+			ShowWindow (ImageWnd::image_wnd.hwnd, SW_HIDE);
 
+			//establish TLS tunnel
+			SOCKET socket;
+			std::string full_message;
+			int recv_return;
+
+			Rain::CreateClientSocket (&Start::p_saddrinfo_www, socket);
+			Rain::ConnToServ (&Start::p_saddrinfo_www, socket);
+
+			Rain::RainCout << "sending request" << std::endl;
+			Rain::SendText (socket, "CONNECT www.pixiv.net/member_illust.php?mode=medium&illust_id=63066659 HTTP/1.1\n"
+				"HOST: www.pixiv.net:443\n"
+				"Connection: keep-alive\n"
+				"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36\n"
+				"\n"
+				"");
+			recv_return = Rain::RecvUntilTimeout (socket, full_message);
+			Rain::RainCout << "Message: \n\n" << full_message << std::endl;
+			std::cin.get ();
+			closesocket (socket);
+
+			//start caching images
+			Rain::RainCout << "Done. Beginning image processing..." << std::endl;
 			Rain::SimpleCreateThread (ImageManager::CacheInitImages, &img_queue_init);
+
+			//show window now
+			ShowWindow (ImageWnd::image_wnd.hwnd, SW_SHOWMAXIMIZED);
 
 			while ((bRet = GetMessage (&msg, NULL, 0, 0)) != 0)
 			{

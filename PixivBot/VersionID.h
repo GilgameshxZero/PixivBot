@@ -13,8 +13,8 @@
 #define STRINGIZE(s) STRINGIZE2(s)
 
 #define VERSION_MAJOR            1
-#define VERSION_MINOR            2
-#define VERSION_REVISION         1
+#define VERSION_MINOR            3
+#define VERSION_REVISION         0
 #define VERSION_BUILD            BUILD_INCREMENT
 
 #define VER_FILE_DESCRIPTION_STR "PixivBot"
