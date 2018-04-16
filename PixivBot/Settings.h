@@ -2,10 +2,8 @@
 
 #include <string>
 
-namespace PixivBot
-{
-	namespace Settings
-	{
+namespace Monochrome8 {
+	namespace PixivBot {
 		extern std::string http_req_header[2][3], //headers for requests, of 6 different types: (r18 illust, r18 recommender, r18 image)(safe illust, safe recommender, safe image)
 			accept_dir, //directory to move accepted images
 			cache_dir, //directory to store cached images

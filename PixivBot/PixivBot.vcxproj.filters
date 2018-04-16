@@ -13,77 +13,46 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Other">
-      <UniqueIdentifier>{49881c99-18c6-448d-9178-7cf1368e633d}</UniqueIdentifier>
+    <Filter Include="Auxiliary">
+      <UniqueIdentifier>{e58ff9dc-5a5f-409e-9236-0af6874b7b8e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Rain Standard Library">
-      <UniqueIdentifier>{21c66f71-bc8b-472a-a733-059c69ff56ef}</UniqueIdentifier>
+    <Filter Include="Configuration">
+      <UniqueIdentifier>{ceb691b5-b851-4671-933e-133878274727}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="VersionBuildInc.h">
+    <ClInclude Include="BuildID.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="VersionID.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Main.h">
+    <ClInclude Include="ImageManager.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Start.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Settings.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rain Standard Library\RainError.h">
-      <Filter>Rain Standard Library</Filter>
-    </ClInclude>
-    <ClInclude Include="Rain Standard Library\RainGdiplusInclude.h">
-      <Filter>Rain Standard Library</Filter>
-    </ClInclude>
-    <ClInclude Include="Rain Standard Library\RainLibraries.h">
-      <Filter>Rain Standard Library</Filter>
-    </ClInclude>
-    <ClInclude Include="Rain Standard Library\RainLogging.h">
-      <Filter>Rain Standard Library</Filter>
-    </ClInclude>
-    <ClInclude Include="Rain Standard Library\RainUtility.h">
-      <Filter>Rain Standard Library</Filter>
-    </ClInclude>
-    <ClInclude Include="Rain Standard Library\RainUtilityFile.h">
-      <Filter>Rain Standard Library</Filter>
-    </ClInclude>
-    <ClInclude Include="Rain Standard Library\RainWindow.h">
-      <Filter>Rain Standard Library</Filter>
-    </ClInclude>
-    <ClInclude Include="Rain Standard Library\RainWindowsLAM.h">
-      <Filter>Rain Standard Library</Filter>
-    </ClInclude>
-    <ClInclude Include="Rain Standard Library\RainWSA2.h">
-      <Filter>Rain Standard Library</Filter>
-    </ClInclude>
-    <ClInclude Include="Rain Standard Library\RainWSA2Include.h">
-      <Filter>Rain Standard Library</Filter>
-    </ClInclude>
-    <ClInclude Include="Rain Standard Library\RainWSA2SendRecv.h">
-      <Filter>Rain Standard Library</Filter>
-    </ClInclude>
-    <ClInclude Include="Rain Standard Library\RainWSA2Utility.h">
-      <Filter>Rain Standard Library</Filter>
     </ClInclude>
     <ClInclude Include="ImageWnd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ImageManager.h">
+    <ClInclude Include="Main.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RequestManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Settings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Start.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="BuildIDInc.bat">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Configuration\config.ini">
+      <Filter>Configuration</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc">
@@ -91,89 +60,24 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
+    <ClCompile Include="ImageManager.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Start.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Settings.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Rain Standard Library\RainError.cpp">
-      <Filter>Rain Standard Library</Filter>
-    </ClCompile>
-    <ClCompile Include="Rain Standard Library\RainGdiplusInclude.cpp">
-      <Filter>Rain Standard Library</Filter>
-    </ClCompile>
-    <ClCompile Include="Rain Standard Library\RainLibraries.cpp">
-      <Filter>Rain Standard Library</Filter>
-    </ClCompile>
-    <ClCompile Include="Rain Standard Library\RainLogging.cpp">
-      <Filter>Rain Standard Library</Filter>
-    </ClCompile>
-    <ClCompile Include="Rain Standard Library\RainUtility.cpp">
-      <Filter>Rain Standard Library</Filter>
-    </ClCompile>
-    <ClCompile Include="Rain Standard Library\RainUtilityFile.cpp">
-      <Filter>Rain Standard Library</Filter>
-    </ClCompile>
-    <ClCompile Include="Rain Standard Library\RainWindow.cpp">
-      <Filter>Rain Standard Library</Filter>
-    </ClCompile>
-    <ClCompile Include="Rain Standard Library\RainWindowsLAM.cpp">
-      <Filter>Rain Standard Library</Filter>
-    </ClCompile>
-    <ClCompile Include="Rain Standard Library\RainWSA2.cpp">
-      <Filter>Rain Standard Library</Filter>
-    </ClCompile>
-    <ClCompile Include="Rain Standard Library\RainWSA2Include.cpp">
-      <Filter>Rain Standard Library</Filter>
-    </ClCompile>
-    <ClCompile Include="Rain Standard Library\RainWSA2SendRecv.cpp">
-      <Filter>Rain Standard Library</Filter>
-    </ClCompile>
-    <ClCompile Include="Rain Standard Library\RainWSA2Utility.cpp">
-      <Filter>Rain Standard Library</Filter>
     </ClCompile>
     <ClCompile Include="ImageWnd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ImageManager.cpp">
+    <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RequestManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="changelog.txt">
-      <Filter>Other</Filter>
-    </Text>
-    <Text Include="config.txt">
-      <Filter>Other</Filter>
-    </Text>
-    <Text Include="memory_leaks.txt">
-      <Filter>Other</Filter>
-    </Text>
-    <Text Include="pixivbot_error.txt">
-      <Filter>Other</Filter>
-    </Text>
-    <Text Include="notes.txt">
-      <Filter>Other</Filter>
-    </Text>
-    <Text Include="..\readme.txt">
-      <Filter>Other</Filter>
-    </Text>
-    <Text Include="future_directions.txt">
-      <Filter>Other</Filter>
-    </Text>
-    <Text Include="config_format.txt">
-      <Filter>Other</Filter>
-    </Text>
-    <Text Include="large_config.txt">
-      <Filter>Other</Filter>
-    </Text>
+    <ClCompile Include="Settings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Start.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="prog_icon.ico">
@@ -181,8 +85,23 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\.gitignore">
-      <Filter>Other</Filter>
-    </None>
+    <Text Include="Configuration\config_format.txt">
+      <Filter>Configuration</Filter>
+    </Text>
+    <Text Include="Configuration\config_sample.txt">
+      <Filter>Configuration</Filter>
+    </Text>
+    <Text Include="Configuration\large_config.txt">
+      <Filter>Configuration</Filter>
+    </Text>
+    <Text Include="Auxiliary\PixivBotErrors.txt">
+      <Filter>Auxiliary</Filter>
+    </Text>
+    <Text Include="Auxiliary\PixivBotMemoryLeaks.txt">
+      <Filter>Auxiliary</Filter>
+    </Text>
+    <Text Include="Configuration\config.txt">
+      <Filter>Configuration</Filter>
+    </Text>
   </ItemGroup>
 </Project>

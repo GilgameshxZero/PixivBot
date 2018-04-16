@@ -1,9 +1,7 @@
 #include "Settings.h"
 
-namespace PixivBot
-{
-	namespace Settings
-	{
+namespace Monochrome8 {
+	namespace PixivBot {
 		std::string http_req_header[2][3],
 			accept_dir,
 			cache_dir,

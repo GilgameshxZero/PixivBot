@@ -1,1 +1,0 @@
-change program Pre-Build Step back to "C:\Main\Active\Documents\Programming\VisualStudio\BuildIncScript.exe VersionBuildInc.h", from the current "BuildIncScript.exe VersionBuildInc.h", which makes github syncing easier

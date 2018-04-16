@@ -1,30 +1,29 @@
 #include "RainWindow.h"
 
-namespace Rain
-{
+namespace Rain {
 	const LPCTSTR RainWindow::NULLCLASSNAME = "";
 	int RainWindow::class_id;
 	std::unordered_map<HWND, RainWindow *> RainWindow::objmap;
 
-	RainWindow::RainWindow ()
-	{
+	RainWindow::RainWindow() {
 		hwnd = NULL;
 		classname = NULL;
 	}
-	RainWindow::~RainWindow ()
-	{
-		if (hwnd)
-		{
-			DestroyWindow (hwnd);
+	RainWindow::~RainWindow() {
+		if (hwnd) {
+			int k = DestroyWindow(hwnd);
+			if (k == 0) {
+				int p = GetLastError();
+				k += p;
+			}
 			hwnd = NULL;
 		}
-		if (classname)
-		{
+		if (classname) {
 			delete[] classname;
 			classname = NULL;
 		}
 	}
-	int RainWindow::Create (
+	int RainWindow::create(
 		std::unordered_map<UINT, MSGFC> *msgm,
 		MSGFC	*intfc,
 		UINT      style,
@@ -45,37 +44,33 @@ namespace Rain
 		int       nHeight,
 		HWND      hWndParent,
 		HMENU     hMenu,
-		LPCTSTR   lpszClassName)
-	{
+		LPCTSTR   lpszClassName) {
 		this->msgm = msgm;
 		this->intfc = intfc;
 
-		if (lpszClassName == NULLCLASSNAME)
-		{
-			static LPCTSTR prefix = _T ("Rain::Mono5::RainWindow ");
-			static const size_t prelen = _tcslen (prefix);
+		if (lpszClassName == NULLCLASSNAME) {
+			static LPCTSTR prefix = _T("Rain::Mono5::RainWindow ");
+			static const size_t prelen = _tcslen(prefix);
 			LPTSTR format = new TCHAR[prelen + 3]; //2 for the "%d", and 1 for the "\0"
-			int idlen = IntLogLen (class_id); //length of class_id
-			classname = new TCHAR[idlen + prelen + 1]; //1 for the "\0"
-			_tcscpy_s (format, prelen + 3, prefix);
-			_tcscat_s (format, prelen + 3, _T ("%d"));
-			_stprintf_s (classname, idlen + prelen + 1, format, class_id);
+			int idlen = intLogLen(class_id); //length of class_id
+			classname = new TCHAR[idlen + prelen + 1]; //1 for the "\0", memory freed later
+			_tcscpy_s(format, prelen + 3, prefix);
+			_tcscat_s(format, prelen + 3, _T("%d"));
+			_stprintf_s(classname, idlen + prelen + 1, format, class_id);
 			lpszClassName = classname;
 			class_id++;
 			delete[] format;
-		}
-		else
-		{
-			size_t prelen = _tcslen (lpszClassName);
+		} else {
+			size_t prelen = _tcslen(lpszClassName);
 			classname = new TCHAR[prelen + 1];
-			_tcscpy_s (classname, prelen + 1, lpszClassName);
+			_tcscpy_s(classname, prelen + 1, lpszClassName);
 		}
 
 		WNDCLASSEX wcex;
 
-		wcex.cbSize = sizeof (WNDCLASSEX);
+		wcex.cbSize = sizeof(WNDCLASSEX);
 		wcex.style = style;
-		wcex.lpfnWndProc = RainWindowProc;
+		wcex.lpfnWndProc = rainWindowProc;
 		wcex.cbClsExtra = cbClsExtra;
 		wcex.cbWndExtra = cbWndExtra;
 		wcex.hInstance = hInstance;
@@ -86,9 +81,9 @@ namespace Rain
 		wcex.lpszClassName = lpszClassName;
 		wcex.hIconSm = hIconSm;
 
-		if (!RegisterClassEx (&wcex)) return GetLastError ();
+		if (!RegisterClassEx(&wcex)) return GetLastError();
 
-		hwnd = CreateWindowEx (
+		hwnd = CreateWindowEx(
 			dwExStyle,
 			lpszClassName,
 			lpWindowName,
@@ -99,70 +94,63 @@ namespace Rain
 			hInstance,
 			this); //pass pointer to this class, so that we can access message funcs
 
-		if (hwnd == NULL) return GetLastError ();
+		if (hwnd == NULL) return GetLastError();
 
-		objmap.insert (std::make_pair (hwnd, this));
+		objmap.insert(std::make_pair(hwnd, this));
 
 		return 0;
 	}
-	LPCTSTR RainWindow::GetWndClassName ()
-	{
+	LPCTSTR RainWindow::getWndClassName() {
 		return classname;
 	}
 
-	RainWindow *RainWindow::GetWndObj (HWND hwndid)
-	{
-		auto it = objmap.find (hwndid);
-		if (it == objmap.end ())
+	RainWindow *RainWindow::getWndObj(HWND hwndid) {
+		auto it = objmap.find(hwndid);
+		if (it == objmap.end())
 			return NULL;
 		return it->second;
 	}
-	WPARAM RainWindow::EnterMessageLoop ()
-	{
+	WPARAM RainWindow::enterMessageLoop() {
 		MSG msg;
 		BOOL bRet;
 
-		while ((bRet = GetMessage (&msg, NULL, 0, 0)) != 0)
-		{
+		while ((bRet = GetMessage(&msg, NULL, 0, 0)) != 0) {
 			if (bRet == -1)
 				return -1; //serious error
-			else
-			{
-				TranslateMessage (&msg);
-				DispatchMessage (&msg);
+			else {
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
 			}
 		}
 
 		return msg.wParam;
 	}
 
-	LRESULT CALLBACK RainWindowProc (
+	LRESULT CALLBACK rainWindowProc(
 		HWND   hwnd,
 		UINT   uMsg,
 		WPARAM wParam,
-		LPARAM lParam)
-	{
+		LPARAM lParam) {
 		UNALIGNED RainWindow *wndobj;
 
 		if (uMsg == WM_CREATE || uMsg == WM_NCCREATE)
 			wndobj = reinterpret_cast<UNALIGNED RainWindow *>(reinterpret_cast<LPCREATESTRUCT>(lParam)->lpCreateParams);
 		else
-			wndobj = RainWindow::GetWndObj (hwnd);
+			wndobj = RainWindow::getWndObj(hwnd);
 
 		if (wndobj == NULL)
-			return DefWindowProc (hwnd, uMsg, wParam, lParam);
+			return DefWindowProc(hwnd, uMsg, wParam, lParam);
 
-		if (wndobj->intfc != NULL)
-		{
+		if (wndobj->intfc != NULL) {
 			LRESULT rt = (*(wndobj->intfc)) (hwnd, uMsg, wParam, lParam);
 			if (rt != 0)
 				return rt;
 		}
 
-		auto it = wndobj->msgm->find (uMsg);
-		if (it != wndobj->msgm->end ())
-			return it->second (hwnd, uMsg, wParam, lParam);
+		auto it = wndobj->msgm->find(uMsg);
+		if (it != wndobj->msgm->end())
+			return it->second(hwnd, uMsg, wParam, lParam);
 		else
-			return DefWindowProc (hwnd, uMsg, wParam, lParam);
+			return DefWindowProc(hwnd, uMsg, wParam, lParam);
 	}
 }

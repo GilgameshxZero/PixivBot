@@ -2,4 +2,4 @@
 
 #include "Start.h"
 
-int main ();
+int main();

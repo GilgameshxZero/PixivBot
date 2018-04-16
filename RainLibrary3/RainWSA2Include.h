@@ -1,3 +1,11 @@
+/*
+Standard
+*/
+
+/*
+Include this for all WinAPI Winsock2 libraries, instead of winsock2 directly.
+*/
+
 #pragma once
 
 #ifndef WIN32_LEAN_AND_MEAN
@@ -14,4 +22,4 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
-#pragma comment (lib, "Ws2_32.lib")
+#pragma comment(lib, "Ws2_32.lib")
