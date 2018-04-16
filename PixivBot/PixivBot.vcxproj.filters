@@ -19,6 +19,12 @@
     <Filter Include="Configuration">
       <UniqueIdentifier>{ceb691b5-b851-4671-933e-133878274727}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Configuration\gilgameshofuruk">
+      <UniqueIdentifier>{a588115a-3d9b-4495-9a64-f54bc8ff848e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Configuration\fontetheorigin">
+      <UniqueIdentifier>{5f26c81d-3351-4782-93d5-84fc77d65b7c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BuildID.h">
@@ -53,6 +59,18 @@
     <None Include="Configuration\config.ini">
       <Filter>Configuration</Filter>
     </None>
+    <None Include="Configuration\StartImages.ini">
+      <Filter>Configuration</Filter>
+    </None>
+    <None Include="Configuration\gilgameshofuruk\config.ini">
+      <Filter>Configuration\gilgameshofuruk</Filter>
+    </None>
+    <None Include="Configuration\StartImages_Large.ini">
+      <Filter>Configuration</Filter>
+    </None>
+    <None Include="Configuration\fontetheorigin\config.ini">
+      <Filter>Configuration\fontetheorigin</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc">
@@ -85,23 +103,14 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Configuration\config_format.txt">
-      <Filter>Configuration</Filter>
-    </Text>
-    <Text Include="Configuration\config_sample.txt">
-      <Filter>Configuration</Filter>
-    </Text>
-    <Text Include="Configuration\large_config.txt">
-      <Filter>Configuration</Filter>
-    </Text>
-    <Text Include="Auxiliary\PixivBotErrors.txt">
+    <Text Include="Auxiliary\PixivBotErrors.log">
       <Filter>Auxiliary</Filter>
     </Text>
-    <Text Include="Auxiliary\PixivBotMemoryLeaks.txt">
+    <Text Include="Auxiliary\PixivBotMemoryLeaks.log">
       <Filter>Auxiliary</Filter>
     </Text>
-    <Text Include="Configuration\config.txt">
-      <Filter>Configuration</Filter>
+    <Text Include="Auxiliary\PixivBot.log">
+      <Filter>Auxiliary</Filter>
     </Text>
   </ItemGroup>
 </Project>

@@ -9,6 +9,8 @@ See config_format.txt and config_sample.txt for more configuration options
 
 changelog
 	todo
+		pixiv seems to be easing away recommendations - figure out a workaround to this
+
 		limiting request threads but processing images fast may lead to instabilities in slow internet conditions, needs fix
 		this doesn't happen much at all when threads aren't limited
 
@@ -29,6 +31,9 @@ changelog
 		adjusted namespace structure to remove namespaces for individual files and structure them around Monochrome8/PixivBot
 		refactored code styles around brackets and naming
 		added Main.cpp error handling
+		removed sensitive information from version control
+
+		refactor code accordingly
 	1.2.1
 		quick fix for odd manga submissions such as 48561810 which result in program stalling
 		increased crash resistability by moving config.txt file writing forward

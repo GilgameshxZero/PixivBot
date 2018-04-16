@@ -93,6 +93,10 @@
   <ItemGroup>
     <None Include="BuildIDInc.bat" />
     <None Include="Configuration\config.ini" />
+    <None Include="Configuration\fontetheorigin\config.ini" />
+    <None Include="Configuration\gilgameshofuruk\config.ini" />
+    <None Include="Configuration\StartImages.ini" />
+    <None Include="Configuration\StartImages_Large.ini" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -109,12 +113,9 @@
     <Image Include="prog_icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Auxiliary\PixivBotErrors.txt" />
-    <Text Include="Auxiliary\PixivBotMemoryLeaks.txt" />
-    <Text Include="Configuration\config.txt" />
-    <Text Include="Configuration\config_format.txt" />
-    <Text Include="Configuration\config_sample.txt" />
-    <Text Include="Configuration\large_config.txt" />
+    <Text Include="Auxiliary\PixivBot.log" />
+    <Text Include="Auxiliary\PixivBotErrors.log" />
+    <Text Include="Auxiliary\PixivBotMemoryLeaks.log" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
